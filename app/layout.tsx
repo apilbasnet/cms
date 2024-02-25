@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { PageLayout, ThemeProvider } from "@edge-ui/react";
+import Header from "./components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +17,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <div className="flex">
+            {/* <PageLayout> */}
+              <Header />
+              {children}
+            {/* </PageLayout> */}
+          </div>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
