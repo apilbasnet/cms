@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-import { PageLayout, ThemeProvider } from '@edge-ui/react';
-import Header from './components/header';
-
-const inter = Inter({ subsets: ['latin'] });
+import SidebarMenu from '../components/sidebarMenu';
+import { UserProvider } from '@/lib/context/UserContext';
+import { poppins } from '@/lib/font';
+import { Toaster } from '@edge-ui/react';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,20 +17,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
-          <div className="flex">
-            {/* <PageLayout> */}
-            <Header />
+      <body className={poppins.className}>
+        <UserProvider>
+          <div className="flex gap-2">
+            <SidebarMenu />
             {children}
-            {/* </PageLayout> */}
           </div>
-        </ThemeProvider>
+        </UserProvider>
+        <Toaster />
       </body>
     </html>
   );

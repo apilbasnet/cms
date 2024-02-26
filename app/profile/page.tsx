@@ -1,9 +1,10 @@
-import React from 'react'
+import { useUser } from '@/lib/context/UserContext';
+import React from 'react';
 
 const ProfilePage = () => {
-  return (
-    <div>ProfilePage</div>
-  )
-}
+  const { user } = useUser();
 
-export default ProfilePage
+  return <div>{user ? `Hello ${user.email}` : 'ProfilePage'}</div>;
+};
+
+export default ProfilePage;
