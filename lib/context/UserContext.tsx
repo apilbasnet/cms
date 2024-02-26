@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 interface IUser {
   user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setUser: (user: User | null) => void;
   logout: () => Promise<void>;
 }
 
@@ -28,11 +28,19 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       })
       .catch((error) => {
         console.error(error);
-        router.push('/auth/login');
       })
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      router.replace('/');
+    } else {
+      router.replace('/dashboard');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const logout = useCallback(async () => {
     await supabase.auth.signOut();

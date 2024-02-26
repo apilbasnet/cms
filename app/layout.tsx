@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import SidebarMenu from '../components/sidebarMenu';
 import { UserProvider } from '@/lib/context/UserContext';
 import { poppins } from '@/lib/font';
 import { Toaster } from '@edge-ui/react';
@@ -18,12 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={poppins.className}>
-        <UserProvider>
-          <div className="flex gap-2">
-            <SidebarMenu />
-            {children}
-          </div>
-        </UserProvider>
+        <UserProvider>{children}</UserProvider>
         <Toaster />
       </body>
     </html>
