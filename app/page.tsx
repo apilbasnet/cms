@@ -9,9 +9,10 @@ import supabase from '@/lib/client';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export default function Login({ className, ...props }: UserAuthFormProps) {
+export default function Login({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
