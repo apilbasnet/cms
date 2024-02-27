@@ -9,10 +9,7 @@ import supabase from '@/lib/client';
 import { useUser } from '@/lib/context/UserContext';
 import { useRouter } from 'next/navigation';
 
-export default function Login({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) {
+export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -63,7 +60,7 @@ export default function Login({
 
   return (
     <LeftBlock>
-      <div className={cn('grid gap-6', className)} {...props}>
+      <div className="grid gap-6">
         <form onSubmit={onSubmit}>
           <div className="grid gap-2">
             <div className="grid gap-1">
