@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { UserProvider } from '@/lib/context/UserContext';
 import { poppins } from '@/lib/font';
-import { Toaster } from '@edge-ui/react';
+import { PageLayout, Toaster } from '@edge-ui/react';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={poppins.className}>
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+          {/* <PageLayout> */}
+
+            {children}
+          {/* </PageLayout> */}
+          </UserProvider>
         <Toaster />
       </body>
     </html>

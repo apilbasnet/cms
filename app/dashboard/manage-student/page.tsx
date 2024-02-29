@@ -18,42 +18,49 @@ const ManageStudentPage = () => {
       FullName: "DemoName",
       Email: "$250.00",
       Course: "Credit Card",
+      Faculty: "BCA"
     },
     {
       id: "INV002",
       FullName: "DemoName",
       Email: "$150.00",
       Course: "PayPal",
+      Faculty: "BCA"
     },
     {
       id: "INV003",
       FullName: "UnDemoName",
       Email: "$350.00",
       Course: "Bank Transfer",
+      Faculty: "BCA"
     },
     {
       id: "INV004",
       FullName: "DemoName",
       Email: "$450.00",
       Course: "Credit Card",
+      Faculty: "BCA"
     },
     {
       id: "INV005",
       FullName: "DemoName",
       Email: "$550.00",
       Course: "PayPal",
+      Faculty: "BCA"
     },
     {
       id: "INV006",
       FullName: "DemoName",
       Email: "$200.00",
       Course: "Bank Transfer",
+      Faculty: "BCA"
     },
     {
       id: "INV007",
       FullName: "UnDemoName",
       Email: "$300.00",
       Course: "Credit Card",
+      Faculty: "BCA"
     },
   ];
 
@@ -70,6 +77,7 @@ const ManageStudentPage = () => {
             <TableHead className="font-extrabold">Full Name</TableHead>
             <TableHead className="font-extrabold">Email</TableHead>
             <TableHead className="font-extrabold">Course</TableHead>
+            <TableHead className="font-extrabold">Faculty</TableHead>
             <TableHead className=" text-right font-extrabold pr-16">
               Actions
             </TableHead>
@@ -82,6 +90,7 @@ const ManageStudentPage = () => {
               <TableCell>{data.FullName}</TableCell>
               <TableCell>{data.Email}</TableCell>
               <TableCell>{data.Course}</TableCell>
+              <TableCell>{data.Faculty}</TableCell>
               <TableCell className="text-right">
                 <Button variant={"outline"} className="w-20 mr-2">
                   Edit

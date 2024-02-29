@@ -13,3 +13,4 @@ export { PiExamFill as ExamResult } from 'react-icons/pi';
 export { IoIosChatboxes as Chat } from 'react-icons/io';
 export { CgSpinner as Spinner } from 'react-icons/cg';
 export { SiGithub as GitHub } from 'react-icons/si';
+export { FaArrowRight as RightArrow } from "react-icons/fa";
