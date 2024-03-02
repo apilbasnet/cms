@@ -17,39 +17,15 @@ const CoursePage = () => {
   const demoData = [
     {
       id: "1",
-      Course: "Credit Card",
-      Staff: "DemoName",
-      Faculty: "BCA",
-      Actions: "$250.00",
+      Course: "BCA",
+      Actions: "",
     },
     {
       id: "2",
-      Course: "PayPal",
+      Course: "CSIT",
       Staff: "DemoName",
-      Faculty: "BCA",
-      Actions: "$150.00",
-    },
-    {
-      id: "3",
-      Course: "Bank Transfer",
-      Staff: "UnDemoName",
-      Faculty: "BCA",
-      Actions: "$350.00",
-    },
-    {
-      id: "4",
-      Course: "Credit Card",
-      Staff: "DemoName",
-      Faculty: "BCA",
-      Actions: "$450.00",
-    },
-    {
-      id: "5",
-      Course: "PayPal",
-      Staff: "DemoName",
-      Faculty: "BCA",
-      Actions: "$550.00",
-    },
+      Actions: "",
+    }
   ];
 
   return (

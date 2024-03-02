@@ -65,7 +65,7 @@ const ManageStudentPage = () => {
   ];
 
   return (
-    <div className="flex flex-col justify-start items-center w-4/5 py-8 px-8">
+    <div className="flex flex-col justify-start items-center w-4/5 p-8">
       <div>
         <h1 className="font-medium text-xl pb-5">Manage Student</h1>
       </div>

@@ -28,7 +28,6 @@ const menuItems = [
   { label: 'Course', link: '/dashboard/course', icon: Class },
   { label: 'Subject', link: '/dashboard/subject', icon: Subject },
   { label: 'Manage Subject', link: '/dashboard/manage-subject', icon: ManageStaff },
-  { label: 'Class', link: '/dashboard/class', icon: Class },
   { label: 'Add Staff', link: '/dashboard/add-staff', icon: AddStaff },
   { label: 'Manage Staff', link: '/dashboard/manage-staff', icon: ManageStaff },
   { label: 'Add Student', link: '/dashboard/add-student', icon: AddStaff },

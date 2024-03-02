@@ -12,13 +12,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Checkbox,
 } from "@edge-ui/react";
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,9 +26,8 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  course: z.string().length(4),
-  faculty: z.string(),
   staff: z.string(),
+  faculty: z.boolean(),
 });
 
 const SubjectPage = () => {
@@ -75,7 +68,7 @@ const SubjectPage = () => {
 
           <FormField
             control={form.control}
-            name="course"
+            name="staff"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="course">Staffs</FormLabel>
@@ -96,6 +89,7 @@ const SubjectPage = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="faculty"
@@ -105,24 +99,34 @@ const SubjectPage = () => {
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
                   >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Faculty name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BCA">BCA</SelectItem>
-                      <SelectItem value="CSIT">CSIT</SelectItem>
-                    </SelectContent>
+                    <div className="flex items-center space-x-2 mb-4 ">
+                      <Checkbox id="BCA" />
+                      <label
+                        htmlFor="BCA"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        BCA
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="CSIT" />
+                      <label
+                        htmlFor="CSIT"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      >
+                        CSIT
+                      </label>
+                    </div>
                   </Select>
                 </FormControl>
               </FormItem>
             )}
           />
+
           <Button className="w-full">Create</Button>
         </form>
       </Form>
-      
     </div>
   );
 };

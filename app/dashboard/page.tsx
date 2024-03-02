@@ -101,6 +101,9 @@ export default function DashboardPage() {
                 <Card className="col-span-4">
                   <CardHeader>
                     <CardTitle>Attendance Per Subject</CardTitle>
+                  <CardDescription>
+                    Total attendance of students per subject.
+                  </CardDescription>
                   </CardHeader>
                   <CardContent className="pl-2">
                     <Overview />
@@ -110,7 +113,7 @@ export default function DashboardPage() {
                   <CardHeader>
                     <CardTitle>Students/Staffs Overview</CardTitle>
                     <CardDescription>
-                      You made 265 sales this month.
+                      Total students and staffs.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

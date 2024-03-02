@@ -95,8 +95,8 @@ export function Piechart() {
         activeIndex={activeIndex}
         activeShape={renderActiveShape}
         data={data}
-        cx={200}
-        cy={200}
+        cx={220}
+        cy={180}
         innerRadius={60}
         outerRadius={80}
         fill="#FF0000"
