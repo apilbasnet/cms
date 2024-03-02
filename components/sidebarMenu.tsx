@@ -47,7 +47,8 @@ const menuItems = [
     label: 'View Exam Results',
     link: '/dashboard/exam-results',
     icon: ExamResult,
-  }
+  },
+  { label: 'Chat', link: '/dashboard/chat', icon: Chat },
 ];
 
 const SidebarMenu = () => {
