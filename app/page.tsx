@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { cn, Button, Input, Label, useToast } from '@edge-ui/react';
-import { Spinner } from '@/components/icons/icons';
-import LeftBlock from '../components/leftBlock';
-import supabase from '@/lib/client';
-import { useUser } from '@/lib/context/UserContext';
-import { useRouter } from 'next/navigation';
+import React from "react";
+import { useState, useEffect } from "react";
+import { cn, Button, Input, Label, useToast } from "@edge-ui/react";
+import { Spinner } from "@/components/icons/icons";
+import LeftBlock from "../components/leftBlock";
+import { useUser } from "@/lib/context/UserContext";
+import { useRouter } from "next/navigation";
+import { client } from "@/lib/client";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { toast } = useToast();
   const { user, setUser } = useUser();
   const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      router.replace('/dashboard');
+      router.replace("/dashboard");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -28,34 +28,26 @@ export default function Login() {
     event.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data } = await client.post("/users/login", {
+        email,
+        password,
+      });
 
-    if (error) {
+      setUser(data.user);
+      localStorage.setItem("token", data.token);
+    } catch (error: any) {
+      console.log(error);
       toast({
-        title: 'Error',
-        description: error.message || 'Failed to sign in to the account.',
-        variant: 'destructive',
+        title: "Error",
+        description: error.message || "Failed to sign in to the account.",
+
+        variant: "destructive",
       });
 
       setIsLoading(false);
       return;
     }
-
-    if (!data.user) {
-      toast({
-        title: 'Error',
-        description: 'Account with that email does not exist.',
-        variant: 'destructive',
-      });
-
-      setIsLoading(false);
-      return;
-    }
-
-    setUser(data.user);
   }
 
   return (
