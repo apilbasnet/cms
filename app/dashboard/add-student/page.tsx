@@ -31,8 +31,8 @@ const formSchema = z.object({
   phone: z.string().length(10),
   address: z.string(),
   password: z.string().min(8).max(32),
-  batch: z.string().length(4),
-  faculty: z.string(),
+  semester: z.string().length(4),
+  course: z.string(),
 });
 
 const AddStudentPage = () => {
@@ -123,29 +123,46 @@ const AddStudentPage = () => {
           />
           <FormField
             control={form.control}
-            name="batch"
+            name="semester"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="batch">Batch</FormLabel>
-                <FormControl>
-                  <Input id="batch" type="text" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="faculty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="faculty">Faculty</FormLabel>
+                <FormLabel htmlFor="semester">Semester</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Faculty name" />
+                      <SelectValue placeholder="Select" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={String(1)}>1st Semester</SelectItem>
+                      <SelectItem value={String(2)}>2nd Semester</SelectItem>
+                      <SelectItem value={String(3)}>3rdSemester</SelectItem>
+                      <SelectItem value={String(4)}>4th Semester</SelectItem>
+                      <SelectItem value={String(5)}>5th Semester</SelectItem>
+                      <SelectItem value={String(6)}>6th Semester</SelectItem>
+                      <SelectItem value={String(7)}>7th Semester</SelectItem>
+                      <SelectItem value={String(8)}>8th Semester</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="course"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="course">Course</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Course name" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="BCA">BCA</SelectItem>

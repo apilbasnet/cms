@@ -47,14 +47,7 @@ const menuItems = [
     label: 'View Exam Results',
     link: '/dashboard/exam-results',
     icon: ExamResult,
-  },
-  {
-    label: 'Student Feedback',
-    link: '/dashboard/student-feedback',
-    icon: Message,
-  },
-  { label: 'Staff Feedback', link: '/dashboard/staff-feedback', icon: Message },
-  { label: 'Chat', link: '/dashboard/chat', icon: Chat },
+  }
 ];
 
 const SidebarMenu = () => {
