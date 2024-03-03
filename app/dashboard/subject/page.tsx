@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Button,
   Form,
@@ -13,18 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
   Checkbox,
-} from "@edge-ui/react";
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import supabase from "@/lib/client";
+} from '@edge-ui/react';
+import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import supabase from '@/lib/api/client';
 
-const SWASTIK_TLD = "@swastikcollege.edu.np";
+const SWASTIK_TLD = '@swastikcollege.edu.np';
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   staff: z.string(),
   faculty: z.boolean(),
@@ -97,9 +97,7 @@ const SubjectPage = () => {
               <FormItem>
                 <FormLabel htmlFor="faculty">Faculty</FormLabel>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                  >
+                  <Select onValueChange={field.onChange}>
                     <div className="flex items-center space-x-2 mb-4 ">
                       <Checkbox id="BCA" />
                       <label

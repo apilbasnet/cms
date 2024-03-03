@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@edge-ui/react": "^0.1.0",
-    "@supabase/supabase-js": "^2.39.7",
     "axios": "^1.6.7",
     "classnames": "^2.5.1",
     "next": "14.1.0",

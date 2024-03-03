@@ -1,20 +1,14 @@
-"use client";
+'use client';
 
-import { createContext, use, useCallback, useEffect, useState } from "react";
-
-import { Spinner } from "@/components/icons/icons";
-import { useRouter } from "next/navigation";
-import { client } from "../client";
+import { createContext, use, useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Loading } from '@/components/loading';
+import { User, users } from '../api/user.api';
 
 interface IUser {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => Promise<void>;
-}
-interface User {
-  id: string;
-  email: string;
-  name: string;
 }
 
 const UserContext = createContext<IUser | null>(null);
@@ -25,10 +19,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    client
-      .get("/users/me")
+    users
+      .me()
       .then((user) => {
-        setUser(user.data);
+        setUser(user);
       })
       .catch((error) => {
         console.error(error);
@@ -39,25 +33,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!user) {
-      router.replace("/");
+      router.replace('/');
     } else {
-      router.replace("/dashboard");
+      router.replace('/dashboard');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const logout = useCallback(async () => {
     // await supabase.auth.signOut();
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     setUser(null);
   }, []);
 
-  if (loading)
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <Spinner className="animate-spin text-destructive h-12 w-12" />
-      </div>
-    );
+  if (loading) return <Loading />;
 
   return (
     <UserContext.Provider value={{ user, setUser, logout }}>
@@ -68,7 +57,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
 export function useUser() {
   const ctx = use(UserContext);
-  if (!ctx) throw new Error("useUser must be used within a UserProvider");
+  if (!ctx) throw new Error('useUser must be used within a UserProvider');
 
   return ctx;
 }

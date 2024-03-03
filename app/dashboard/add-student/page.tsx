@@ -17,7 +17,7 @@ import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import supabase from '@/lib/client';
+import { client } from '@/lib/api/client';
 
 const SWASTIK_TLD = '@swastikcollege.edu.np';
 
@@ -42,15 +42,14 @@ const AddStudentPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const result = await supabase.auth.admin.createUser({
-      user_metadata: values,
-      email: values.email,
-      email_confirm: false,
-      password: values.password,
-      role: 'student',
-    });
-
-    console.log(result);
+    // const result = await supabase.auth.admin.createUser({
+    //   user_metadata: values,
+    //   email: values.email,
+    //   email_confirm: false,
+    //   password: values.password,
+    //   role: 'student',
+    // });
+    // console.log(result);
   };
 
   return (

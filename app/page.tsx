@@ -1,25 +1,27 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useState, useEffect } from "react";
-import { cn, Button, Input, Label, useToast } from "@edge-ui/react";
-import { Spinner } from "@/components/icons/icons";
-import LeftBlock from "../components/leftBlock";
-import { useUser } from "@/lib/context/UserContext";
-import { useRouter } from "next/navigation";
-import { client } from "@/lib/client";
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { cn, Button, Input, Label, useToast } from '@edge-ui/react';
+import { Spinner } from '@/components/icons/icons';
+import LeftBlock from '../components/leftBlock';
+import { useUser } from '@/lib/context/UserContext';
+import { useRouter } from 'next/navigation';
+import { client } from '@/lib/api/client';
+import { users } from '@/lib/api/user.api';
+import { AxiosError } from 'axios';
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const { toast } = useToast();
   const { user, setUser } = useUser();
   const router = useRouter();
 
   useEffect(() => {
     if (user) {
-      router.replace("/dashboard");
+      router.replace('/dashboard');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -29,20 +31,20 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const { data } = await client.post("/users/login", {
-        email,
-        password,
-      });
+      const data = await users.login(email, password);
 
-      setUser(data.user);
-      localStorage.setItem("token", data.token);
-    } catch (error: any) {
+      setUser(data);
+    } catch (err) {
+      const error = err as AxiosError;
       console.log(error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to sign in to the account.",
+        title: 'Error',
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          'Failed to sign in to the account.',
 
-        variant: "destructive",
+        variant: 'destructive',
       });
 
       setIsLoading(false);

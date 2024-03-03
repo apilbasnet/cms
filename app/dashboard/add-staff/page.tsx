@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Button,
   Form,
@@ -12,18 +12,17 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@edge-ui/react";
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import supabase from "@/lib/client";
+} from '@edge-ui/react';
+import React from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-const SWASTIK_TLD = "@swastikcollege.edu.np";
+const SWASTIK_TLD = '@swastikcollege.edu.np';
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   email: z.string().email().endsWith(SWASTIK_TLD, {
     message: "Email must use Swastik College's domain name.",
@@ -42,15 +41,14 @@ const AddStaffPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const result = await supabase.auth.admin.createUser({
-      user_metadata: values,
-      email: values.email,
-      email_confirm: false,
-      password: values.password,
-      role: "student",
-    });
-
-    console.log(result);
+    // const result = await supabase.auth.admin.createUser({
+    //   user_metadata: values,
+    //   email: values.email,
+    //   email_confirm: false,
+    //   password: values.password,
+    //   role: "student",
+    // });
+    // console.log(result);
   };
 
   return (
