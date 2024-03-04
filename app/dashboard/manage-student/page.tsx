@@ -146,11 +146,11 @@ const ManageStudentPage = () => {
           {studentData.map((data) => (
             <TableRow key={data.id}>
               <TableCell className="font-medium">{data.id}</TableCell>
-              <TableCell>{data.id}</TableCell>
               <TableCell>{data.name}</TableCell>
               <TableCell>{data.email}</TableCell>
               <TableCell>{data.courseId}</TableCell>
               <TableCell>{data.activeSemester}</TableCell>
+
               <TableCell className="text-right">
                 <Button variant={"outline"} className="w-20 mr-2">
                   Edit
