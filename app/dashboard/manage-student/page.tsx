@@ -155,10 +155,15 @@ const ManageStudentPage = () => {
                 <Button variant={"outline"} className="w-20 mr-2">
                   Edit
                 </Button>
-                <AlertPopup onCanceled={() => {}} onConfirmed={() => {}}>
+                <AlertPopup
+                  onCanceled={() => {}}
+                  onConfirmed={() => {
+                    deleteStudent(data.id);
+                  }}
+                >
                   <Button
                     variant="destructive"
-                    onClick={() => deleteStudent(data.id)}
+                    // onClick={() => deleteStudent(data.id)}
                   >
                     Delete
                   </Button>
