@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Button,
   Form,
@@ -13,24 +13,30 @@ import {
   SelectTrigger,
   SelectValue,
   Checkbox,
-} from '@edge-ui/react';
-import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import supabase from '@/lib/api/client';
+} from "@edge-ui/react";
+import React, { useState, useCallback, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Course, courses } from "@/lib/api/course.api";
+import { AxiosError } from "axios";
+import { useToast } from "@edge-ui/react";
 
-const SWASTIK_TLD = '@swastikcollege.edu.np';
+const SWASTIK_TLD = "@swastikcollege.edu.np";
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
+    message: "Name must be at least 2 characters.",
   }),
   staff: z.string(),
   faculty: z.boolean(),
 });
 
 const SubjectPage = () => {
+  const [loading, setLoading] = useState(true);
+  const [courseData, setCourseData] = useState<Course[]>([]);
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
@@ -44,6 +50,29 @@ const SubjectPage = () => {
     // });
     // console.log(result);
   };
+
+  const getCourses = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await courses.getCourses();
+      setCourseData(data);
+    } catch (err: any) {
+      const error = err as AxiosError;
+      toast({
+        title: "Error",
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          "Failed to fetch courses",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    getCourses();
+  }, []);
 
   return (
     <div className="flex items-center justify-start flex-col gap-4 w-full py-8 ">
@@ -95,27 +124,23 @@ const SubjectPage = () => {
             name="faculty"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="faculty">Faculty</FormLabel>
+                <FormLabel htmlFor="course">Courses</FormLabel>
                 <FormControl>
                   <Select onValueChange={field.onChange}>
-                    <div className="flex items-center space-x-2 mb-4 ">
-                      <Checkbox id="BCA" />
-                      <label
-                        htmlFor="BCA"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    {courseData.map((course) => (
+                      <div
+                        key={course.id}
+                        className="flex items-center space-x-2 mb-4  "
                       >
-                        BCA
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="CSIT" />
-                      <label
-                        htmlFor="CSIT"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        CSIT
-                      </label>
-                    </div>
+                        <Checkbox id={course.name} />
+                        <label
+                          htmlFor={course.name}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {course.name}
+                        </label>
+                      </div>
+                    ))}
                   </Select>
                 </FormControl>
               </FormItem>

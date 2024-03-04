@@ -1,10 +1,16 @@
 "use client";
 import React, { useCallback, useState } from "react";
 import { PieChart, Pie, Sector } from "recharts";
+import { useUser } from "@/lib/context/UserContext";
 
 const data = [
   { name: "Students", value: 1 },
   { name: "Staffs", value: 1 },
+];
+
+const attendance = [
+  { name: "Present", value: 5 },
+  { name: "Absent", value: 5 },
 ];
 
 const renderActiveShape = (props: any) => {
@@ -81,6 +87,7 @@ const renderActiveShape = (props: any) => {
 };
 
 export function Piechart() {
+  const { user } = useUser();
   const [activeIndex, setActiveIndex] = useState(0);
   const onPieEnter = useCallback(
     (event: React.MouseEvent<SVGElement, MouseEvent>, index: number) => {

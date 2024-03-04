@@ -1,15 +1,16 @@
-import React from "react";
+"use client";
+
 import {
   Button,
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@edge-ui/react";
+import AlertPopup from "@/components/AlertDialog";
 
 const ManageStaffPage = () => {
   const demoData = [
@@ -88,7 +89,9 @@ const ManageStaffPage = () => {
                 <Button variant={"outline"} className="w-20 mr-2">
                   Edit
                 </Button>
-                <Button>Delete</Button>
+                <AlertPopup onCanceled={() => {}} onConfirmed={() => {}}>
+                  <Button variant="destructive">Delete</Button>
+                </AlertPopup>
               </TableCell>
             </TableRow>
           ))}

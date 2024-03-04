@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Button,
   Form,
@@ -7,22 +7,22 @@ import {
   FormItem,
   FormLabel,
   Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@edge-ui/react';
-import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from "@edge-ui/react";
+import { useCallback } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { set, z } from "zod";
+import { useToast } from "@edge-ui/react";
+import { useState } from "react";
+import { AxiosError } from "axios";
+import { Staff, staffs } from "@/lib/api/staff.api";
+import { Spinner } from "@/components/icons/icons";
 
-const SWASTIK_TLD = '@swastikcollege.edu.np';
+const SWASTIK_TLD = "@swastikcollege.edu.np";
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
+    message: "Name must be at least 2 characters.",
   }),
   email: z.string().email().endsWith(SWASTIK_TLD, {
     message: "Email must use Swastik College's domain name.",
@@ -35,21 +35,49 @@ const formSchema = z.object({
 });
 
 const AddStaffPage = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { toast } = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [teacherData, setTeacherData] = useState<Staff[]>([]);
+
+  const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {},
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // const result = await supabase.auth.admin.createUser({
-    //   user_metadata: values,
-    //   email: values.email,
-    //   email_confirm: false,
-    //   password: values.password,
-    //   role: "student",
-    // });
-    // console.log(result);
+  const addTeachers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await staffs.createTeacher({
+        id: 0,
+        name: `${name}`,
+        email: `${email}`,
+        phone: `${phone}`,
+        address: `${address}`,
+      });
+      setTeacherData([data]);
+    } catch (err: any) {
+      const error = err as AxiosError;
+      toast({
+        title: "Error",
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          "Failed to add teacher",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast, name, email, phone, address]);
+
+  const onSubmit = () => {
+    addTeachers();
   };
+
+  console.log(teacherData);
 
   return (
     <div className="flex items-center justify-start flex-col gap-4 w-full py-8 ">
@@ -66,7 +94,14 @@ const AddStaffPage = () => {
               <FormItem>
                 <FormLabel htmlFor="name">Name</FormLabel>
                 <FormControl>
-                  <Input id="name" type="text" {...field} />
+                  <Input
+                    id="name"
+                    type="text"
+                    {...field}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -78,7 +113,14 @@ const AddStaffPage = () => {
               <FormItem>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <FormControl>
-                  <Input id="email" type="email" {...field} />
+                  <Input
+                    id="email"
+                    type="email"
+                    {...field}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -90,7 +132,14 @@ const AddStaffPage = () => {
               <FormItem>
                 <FormLabel htmlFor="phone">Phone</FormLabel>
                 <FormControl>
-                  <Input id="phone" type="tel" {...field} />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    {...field}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -102,7 +151,14 @@ const AddStaffPage = () => {
               <FormItem>
                 <FormLabel htmlFor="address">Address</FormLabel>
                 <FormControl>
-                  <Input id="address" type="text" {...field} />
+                  <Input
+                    id="address"
+                    type="text"
+                    {...field}
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -114,58 +170,23 @@ const AddStaffPage = () => {
               <FormItem>
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <FormControl>
-                  <Input id="password" type="password" {...field} />
+                  <Input
+                    id="password"
+                    type="password"
+                    {...field}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
                 </FormControl>
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="course"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="course">Course</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Course name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {/* <SelectItem value="...">.......</SelectItem>
-                      <SelectItem value="...">.......</SelectItem> */}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="faculty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="faculty">Faculty</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Faculty name" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="BCA">BCA</SelectItem>
-                      <SelectItem value="CSIT">CSIT</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button className="w-full">Create</Button>
+
+          <Button disabled={loading} onClick={addTeachers} className="w-full">
+            {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
+            Create
+          </Button>
         </form>
       </Form>
     </div>

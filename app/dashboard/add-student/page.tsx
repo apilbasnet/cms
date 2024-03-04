@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Button,
   Form,
@@ -12,18 +12,24 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@edge-ui/react';
-import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { client } from '@/lib/api/client';
+  useToast,
+} from "@edge-ui/react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { client } from "@/lib/api/client";
+import { Course, courses } from "@/lib/api/course.api";
+import { AxiosError } from "axios";
+import { Student, students } from "@/lib/api/student.api";
+import { get } from "http";
+import { Spinner } from "@/components/icons/icons";
 
-const SWASTIK_TLD = '@swastikcollege.edu.np';
+const SWASTIK_TLD = "@swastikcollege.edu.np";
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: 'Name must be at least 2 characters.',
+    message: "Name must be at least 2 characters.",
   }),
   email: z.string().email().endsWith(SWASTIK_TLD, {
     message: "Email must use Swastik College's domain name.",
@@ -31,35 +37,95 @@ const formSchema = z.object({
   phone: z.string().length(10),
   address: z.string(),
   password: z.string().min(8).max(32),
-  semester: z.string().length(4),
-  course: z.string(),
+  semester: z.number(),
+  course: z.number(),
 });
 
 const AddStudentPage = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [activeSemester, setActiveSemester] = useState(0);
+  const [courseId, setCourseId] = useState(0);
+  const [studentData, setStudentData] = useState<Student[]>([]);
+  const [courseData, setCourseData] = useState<Course[]>([]);
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // const result = await supabase.auth.admin.createUser({
-    //   user_metadata: values,
-    //   email: values.email,
-    //   email_confirm: false,
-    //   password: values.password,
-    //   role: 'student',
-    // });
-    // console.log(result);
-  };
+  // const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  //   // const result = await supabase.auth.admin.createUser({
+  //   //   user_metadata: values,
+  //   //   email: values.email,
+  //   //   email_confirm: false,
+  //   //   password: values.password,
+  //   //   role: 'student',
+  //   // });
+  //   // console.log(result);
+  // };
+
+  const createStudents = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await students.createStudent({
+        name,
+        email,
+        contact: `${phone}`,
+        address: `${address}`,
+        password: `${password}`,
+        courseId: Number(`${courseId}`), // Convert courseId to a number
+        activeSemester: Number(`${activeSemester}`), // Convert activeSemester to a number
+      });
+      setStudentData([data]);
+    } catch (err: any) {
+      const error = err as AxiosError;
+      toast({
+        title: "Error",
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          "Failed to fetch courses",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast, name, email, phone, address, password, courseId, activeSemester]);
+
+  const getCourses = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await courses.getCourses();
+      setCourseData(data);
+    } catch (err: any) {
+      const error = err as AxiosError;
+      toast({
+        title: "Error",
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          "Failed to fetch courses",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    createStudents();
+    getCourses();
+  }, []);
 
   return (
     <div className="flex items-center justify-start flex-col gap-4 w-full py-8">
       <h1 className="font-medium text-xl">Add student</h1>
       <Form {...form}>
-        <form
-          className="w-1/2 space-y-4"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
+        <form className="w-1/2 space-y-4">
           <FormField
             control={form.control}
             name="name"
@@ -67,7 +133,12 @@ const AddStudentPage = () => {
               <FormItem>
                 <FormLabel htmlFor="name">Name</FormLabel>
                 <FormControl>
-                  <Input id="name" type="text" {...field} />
+                  <Input
+                    id="name"
+                    type="text"
+                    {...field}
+                    onChange={(event) => setName(event.target.value)}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -79,7 +150,12 @@ const AddStudentPage = () => {
               <FormItem>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <FormControl>
-                  <Input id="email" type="email" {...field} />
+                  <Input
+                    id="email"
+                    type="email"
+                    {...field}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -91,7 +167,12 @@ const AddStudentPage = () => {
               <FormItem>
                 <FormLabel htmlFor="phone">Phone</FormLabel>
                 <FormControl>
-                  <Input id="phone" type="tel" {...field} />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    {...field}
+                    onChange={(event) => setPhone(event.target.value)}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -103,7 +184,12 @@ const AddStudentPage = () => {
               <FormItem>
                 <FormLabel htmlFor="address">Address</FormLabel>
                 <FormControl>
-                  <Input id="address" type="text" {...field} />
+                  <Input
+                    id="address"
+                    type="text"
+                    {...field}
+                    onChange={(event) => setAddress(event.target.value)}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -115,7 +201,12 @@ const AddStudentPage = () => {
               <FormItem>
                 <FormLabel htmlFor="password">Password</FormLabel>
                 <FormControl>
-                  <Input id="password" type="password" {...field} />
+                  <Input
+                    id="password"
+                    type="password"
+                    {...field}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -128,8 +219,8 @@ const AddStudentPage = () => {
                 <FormLabel htmlFor="semester">Semester</FormLabel>
                 <FormControl>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(e) => setActiveSemester(Number(e))}
+                    value={String(activeSemester)}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select" />
@@ -157,22 +248,32 @@ const AddStudentPage = () => {
                 <FormLabel htmlFor="course">Course</FormLabel>
                 <FormControl>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(e) => setCourseId(Number(e))}
+                    value={String(courseId)}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Course name" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="BCA">BCA</SelectItem>
-                      <SelectItem value="CSIT">CSIT</SelectItem>
+                      {courseData.map((course) => (
+                        <SelectItem key={course.id} value={String(course.id)}>
+                          {course.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
               </FormItem>
             )}
           />
-          <Button className="w-full">Create</Button>
+          <Button
+            disabled={loading}
+            onClick={createStudents}
+            className="w-full"
+          >
+            {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
+            Create
+          </Button>
         </form>
       </Form>
     </div>

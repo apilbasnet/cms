@@ -26,12 +26,14 @@ import { Course, courses } from "@/lib/api/course.api";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import CourseAdd from "./(comp)/CourseAdd";
+import { useUser } from "@/lib/context/UserContext";
 
 const CoursePage = () => {
   const [courseData, setCourseData] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useUser();
 
   const getCourses = useCallback(async () => {
     setLoading(true);
@@ -118,9 +120,11 @@ const CoursePage = () => {
     <>
       <div className="flex flex-col justify-start items-center w-5/6 py-8 px-8">
         <div>
-          <h1 className="font-medium text-xl pb-5">Manage Course</h1>
+          <h1 className="font-medium text-xl pb-5">
+            {user?.role === "ADMIN" ? "Manage Course" : "Course"}
+          </h1>
         </div>
-        <CourseAdd refresh={getCourses} />
+        {user?.role === "ADMIN" ? <CourseAdd refresh={getCourses} /> : null}
         <Table className="border rounded-2xl">
           <TableCaption className="mt-5">
             A list of the courses presented in Swastik College
@@ -129,9 +133,11 @@ const CoursePage = () => {
             <TableRow>
               <TableHead className="font-extrabold">ID</TableHead>
               <TableHead className="font-extrabold">Course</TableHead>
-              <TableHead className="font-extrabold text-right pr-16">
-                Actions
-              </TableHead>
+              {user?.role === "ADMIN" ? (
+                <TableHead className="font-extrabold text-right pr-16">
+                  Actions
+                </TableHead>
+              ) : null}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -139,63 +145,67 @@ const CoursePage = () => {
               <TableRow key={data.id}>
                 <TableCell className="font-medium">{data.id}</TableCell>
                 <TableCell>{data.name}</TableCell>
-                <TableCell className="text-right ">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="secondary" className="mr-2">
-                        Edit
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          <Input
-                            type="text"
-                            placeholder="Course"
-                            value={editCourseName}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) => setEditCourseName(event.target.value)}
-                          />
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => editCourse(data.id)}>
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive">Delete</Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete your account and remove your data from our
-                          servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => deleteCourse(data.id)}
-                        >
-                          Continue
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </TableCell>
+                {user?.role === "ADMIN" ? (
+                  <TableCell className="text-right ">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="secondary" className="mr-2">
+                          Edit
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            <Input
+                              type="text"
+                              placeholder="Course"
+                              value={editCourseName}
+                              onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ) => setEditCourseName(event.target.value)}
+                            />
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => editCourse(data.id)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive">Delete</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account and remove your data from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteCourse(data.id)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                ) : null}
               </TableRow>
             ))}
           </TableBody>

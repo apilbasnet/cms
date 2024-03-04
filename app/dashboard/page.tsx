@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -14,8 +16,11 @@ import { Overview } from "../../components/overview";
 import { Piechart } from "../../components/piechart";
 import { RightArrow } from "@/components/icons/icons";
 import Link from "next/link";
+import { useUser } from "@/lib/context/UserContext";
 
-export default function DashboardPage() {
+const DashboardPage = () => {
+  const user = useUser();
+
   return (
     <>
       <div className="hidden flex-col md:flex w-screen ">
@@ -31,11 +36,21 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Students
+                      {user.user?.role === "ADMIN"
+                        ? "Total Students"
+                        : user.user?.role === "TEACHER"
+                        ? "Total Students"
+                        : "Total Attendance"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="">
-                    <div className="text-2xl font-bold">1</div>
+                    <div className="text-2xl font-bold">
+                      {user.user?.role === "ADMIN"
+                        ? "2"
+                        : user.user?.role === "TEACHER"
+                        ? "2"
+                        : "4"}
+                    </div>
                     <Link
                       href={"/dashboard/manage-student"}
                       className="text-xs text-muted-foreground flex gap-1 items-center"
@@ -48,7 +63,11 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Staff
+                      {user.user?.role === "ADMIN"
+                        ? "Total Staff"
+                        : user.user?.role === "TEACHER"
+                        ? "Total Attendance Taken"
+                        : "Percentage Present"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -65,7 +84,11 @@ export default function DashboardPage() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      Total Courses
+                      {user.user?.role === "ADMIN"
+                        ? "Total Courses"
+                        : user.user?.role === "TEACHER"
+                        ? "Total Courses"
+                        : "Percentage Absent"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -100,10 +123,20 @@ export default function DashboardPage() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
                 <Card className="col-span-4">
                   <CardHeader>
-                    <CardTitle>Attendance Per Subject</CardTitle>
-                  <CardDescription>
-                    Total attendance of students per subject.
-                  </CardDescription>
+                    <CardTitle>
+                      {user.user?.role === "ADMIN"
+                        ? "Attendance Per Subject"
+                        : user.user?.role === "TEACHER"
+                        ? "Staff Panel"
+                        : "Student Panel"}
+                    </CardTitle>
+                    <CardDescription>
+                      {user.user?.role === "ADMIN"
+                        ? "Total attendance of students per subject."
+                        : user.user?.role === "TEACHER"
+                        ? `${user.user.name} - Attendance`
+                        : `${user.user?.name} - Attendance`}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="pl-2">
                     <Overview />
@@ -111,7 +144,13 @@ export default function DashboardPage() {
                 </Card>
                 <Card className="col-span-3">
                   <CardHeader>
-                    <CardTitle>Students/Staffs Overview</CardTitle>
+                    <CardTitle>
+                      {user.user?.role === "ADMIN"
+                        ? "Students/Staffs Overview"
+                        : user.user?.role === "TEACHER"
+                        ? `${user.user.name} - Attendance`
+                        : `${user.user?.name} - Attendance`}
+                    </CardTitle>
                     <CardDescription>
                       Total students and staffs.
                     </CardDescription>
@@ -127,4 +166,6 @@ export default function DashboardPage() {
       </div>
     </>
   );
-}
+};
+
+export default DashboardPage;
