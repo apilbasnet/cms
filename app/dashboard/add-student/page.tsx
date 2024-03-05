@@ -230,14 +230,11 @@ const AddStudentPage = () => {
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={String(1)}>1st Semester</SelectItem>
-                      <SelectItem value={String(2)}>2nd Semester</SelectItem>
-                      <SelectItem value={String(3)}>3rdSemester</SelectItem>
-                      <SelectItem value={String(4)}>4th Semester</SelectItem>
-                      <SelectItem value={String(5)}>5th Semester</SelectItem>
-                      <SelectItem value={String(6)}>6th Semester</SelectItem>
-                      <SelectItem value={String(7)}>7th Semester</SelectItem>
-                      <SelectItem value={String(8)}>8th Semester</SelectItem>
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <SelectItem key={i} value={String(i + 1)}>
+                          {i + 1} Semester
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
