@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   Button,
   Form,
@@ -13,23 +13,23 @@ import {
   SelectTrigger,
   SelectValue,
   useToast,
-} from "@edge-ui/react";
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { client } from "@/lib/api/client";
-import { Course, courses } from "@/lib/api/course.api";
-import { AxiosError } from "axios";
-import { Student, students } from "@/lib/api/student.api";
-import { get } from "http";
-import { Spinner } from "@/components/icons/icons";
+} from '@edge-ui/react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { client } from '@/lib/api/client';
+import { Course, courses } from '@/lib/api/course.api';
+import { AxiosError } from 'axios';
+import { Student, students } from '@/lib/api/student.api';
+import { get } from 'http';
+import { Spinner } from '@/components/icons/icons';
 
-const SWASTIK_TLD = "@swastikcollege.edu.np";
+const SWASTIK_TLD = '@swastikcollege.edu.np';
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   email: z.string().email().endsWith(SWASTIK_TLD, {
     message: "Email must use Swastik College's domain name.",
@@ -42,11 +42,11 @@ const formSchema = z.object({
 });
 
 const AddStudentPage = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeSemester, setActiveSemester] = useState(0);
   const [courseId, setCourseId] = useState(0);
@@ -83,14 +83,18 @@ const AddStudentPage = () => {
         activeSemester: Number(`${activeSemester}`), // Convert activeSemester to a number
       });
       setStudentData([data]);
+      toast({
+        title: 'Success',
+        description: 'Student created successfully',
+      });
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to fetch courses",
+          'Failed to fetch courses',
       });
     } finally {
       setLoading(false);
@@ -105,11 +109,11 @@ const AddStudentPage = () => {
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to fetch courses",
+          'Failed to fetch courses',
       });
     } finally {
       setLoading(false);

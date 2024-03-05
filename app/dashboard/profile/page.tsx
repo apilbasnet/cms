@@ -5,6 +5,7 @@ import { useUser } from '@/lib/context/UserContext';
 import Image from 'next/image';
 import React from 'react';
 import SwastikIcon from '@/components/icons/Swastik.png';
+import { cn } from '@edge-ui/react';
 
 const ProfilePage = () => {
   const { user } = useUser();
@@ -52,7 +53,10 @@ const ProfilePage = () => {
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <h1 className="text-base">
-      {label}: <span className="font-bold">{value}</span>
+      {label}:{' '}
+      <span className={cn(`font-bold`, label === 'Name' && 'text-pink-700')}>
+        {value}
+      </span>
     </h1>
   );
 }
