@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Card,
@@ -8,18 +8,35 @@ import {
   CardTitle,
   Tabs,
   TabsContent,
-} from "@edge-ui/react";
-import Image from "next/image";
-import React from "react";
+} from '@edge-ui/react';
+import Image from 'next/image';
+import React, { useEffect } from 'react';
 
-import { Overview } from "../../components/overview";
-import { Piechart } from "../../components/piechart";
-import { RightArrow } from "@/components/icons/icons";
-import Link from "next/link";
-import { useUser } from "@/lib/context/UserContext";
+import { Overview } from '../../components/overview';
+import { Piechart } from '../../components/piechart';
+import { RightArrow } from '@/components/icons/icons';
+import Link from 'next/link';
+import { useUser } from '@/lib/context/UserContext';
+import { IStats, users } from '@/lib/api/user.api';
 
 const DashboardPage = () => {
   const user = useUser();
+  const [stats, setStats] = React.useState<IStats>({
+    admins: 0,
+    students: 0,
+    courses: 0,
+    subjects: 0,
+    teachers: 0,
+  });
+
+  useEffect(() => {
+    users.getStatistics().then(
+      (data) => {
+        setStats(data);
+      },
+      () => {}
+    );
+  }, []);
 
   return (
     <>
@@ -36,23 +53,23 @@ const DashboardPage = () => {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      {user.user?.role === "ADMIN"
-                        ? "Total Students"
-                        : user.user?.role === "TEACHER"
-                        ? "Total Students"
-                        : "Total Attendance"}
+                      {user.user?.role === 'ADMIN'
+                        ? 'Total Students'
+                        : user.user?.role === 'TEACHER'
+                        ? 'Total Students'
+                        : 'Total Attendance'}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="">
                     <div className="text-2xl font-bold">
-                      {user.user?.role === "ADMIN"
-                        ? "2"
-                        : user.user?.role === "TEACHER"
-                        ? "2"
-                        : "4"}
+                      {user.user?.role === 'ADMIN'
+                        ? stats.students
+                        : user.user?.role === 'TEACHER'
+                        ? stats.students
+                        : 0}
                     </div>
                     <Link
-                      href={"/dashboard/manage-student"}
+                      href={'/dashboard/manage-student'}
                       className="text-xs text-muted-foreground flex gap-1 items-center"
                     >
                       More info
@@ -63,17 +80,23 @@ const DashboardPage = () => {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      {user.user?.role === "ADMIN"
-                        ? "Total Staff"
-                        : user.user?.role === "TEACHER"
-                        ? "Total Attendance Taken"
-                        : "Percentage Present"}
+                      {user.user?.role === 'ADMIN'
+                        ? 'Total Staff'
+                        : user.user?.role === 'TEACHER'
+                        ? 'Total Attendance Taken'
+                        : 'Percentage Present'}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">1</div>
+                    <div className="text-2xl font-bold">
+                      {user.user?.role === 'ADMIN'
+                        ? stats.teachers
+                        : user.user?.role === 'TEACHER'
+                        ? 0
+                        : 0}
+                    </div>
                     <Link
-                      href={"/dashboard/manage-staff"}
+                      href={'/dashboard/manage-staff'}
                       className="text-xs text-muted-foreground flex gap-1 items-center"
                     >
                       More info
@@ -84,17 +107,23 @@ const DashboardPage = () => {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">
-                      {user.user?.role === "ADMIN"
-                        ? "Total Courses"
-                        : user.user?.role === "TEACHER"
-                        ? "Total Courses"
-                        : "Percentage Absent"}
+                      {user.user?.role === 'ADMIN'
+                        ? 'Total Courses'
+                        : user.user?.role === 'TEACHER'
+                        ? 'Total Courses'
+                        : 'Percentage Absent'}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">2</div>
+                    <div className="text-2xl font-bold">
+                      {user.user?.role === 'ADMIN'
+                        ? stats.courses
+                        : user.user?.role === 'TEACHER'
+                        ? stats.courses
+                        : 0}
+                    </div>
                     <Link
-                      href={"/dashboard/course"}
+                      href={'/dashboard/course'}
                       className="text-xs text-muted-foreground flex gap-1 items-center"
                     >
                       More info
@@ -109,9 +138,9 @@ const DashboardPage = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">5</div>
+                    <div className="text-2xl font-bold">{stats.subjects}</div>
                     <Link
-                      href={"/dashboard/subject"}
+                      href={'/dashboard/subject'}
                       className="text-xs text-muted-foreground flex gap-1 items-center"
                     >
                       More info
@@ -124,16 +153,16 @@ const DashboardPage = () => {
                 <Card className="col-span-4">
                   <CardHeader>
                     <CardTitle>
-                      {user.user?.role === "ADMIN"
-                        ? "Attendance Per Subject"
-                        : user.user?.role === "TEACHER"
-                        ? "Staff Panel"
-                        : "Student Panel"}
+                      {user.user?.role === 'ADMIN'
+                        ? 'Attendance Per Subject'
+                        : user.user?.role === 'TEACHER'
+                        ? 'Staff Panel'
+                        : 'Student Panel'}
                     </CardTitle>
                     <CardDescription>
-                      {user.user?.role === "ADMIN"
-                        ? "Total attendance of students per subject."
-                        : user.user?.role === "TEACHER"
+                      {user.user?.role === 'ADMIN'
+                        ? 'Total attendance of students per subject.'
+                        : user.user?.role === 'TEACHER'
                         ? `${user.user.name} - Attendance`
                         : `${user.user?.name} - Attendance`}
                     </CardDescription>
@@ -145,9 +174,9 @@ const DashboardPage = () => {
                 <Card className="col-span-3">
                   <CardHeader>
                     <CardTitle>
-                      {user.user?.role === "ADMIN"
-                        ? "Students/Staffs Overview"
-                        : user.user?.role === "TEACHER"
+                      {user.user?.role === 'ADMIN'
+                        ? 'Students/Staffs Overview'
+                        : user.user?.role === 'TEACHER'
                         ? `${user.user.name} - Attendance`
                         : `${user.user?.name} - Attendance`}
                     </CardTitle>
@@ -156,7 +185,7 @@ const DashboardPage = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Piechart />
+                    <Piechart stats={stats} />
                   </CardContent>
                 </Card>
               </div>

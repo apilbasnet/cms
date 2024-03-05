@@ -1,17 +1,7 @@
-"use client";
-import React, { useCallback, useState } from "react";
-import { PieChart, Pie, Sector } from "recharts";
-import { useUser } from "@/lib/context/UserContext";
-
-const data = [
-  { name: "Students", value: 1 },
-  { name: "Staffs", value: 1 },
-];
-
-const attendance = [
-  { name: "Present", value: 5 },
-  { name: "Absent", value: 5 },
-];
+'use client';
+import React, { useCallback, useState } from 'react';
+import { PieChart, Pie, Sector } from 'recharts';
+import { IStats } from '@/lib/api/user.api';
 
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
@@ -36,7 +26,7 @@ const renderActiveShape = (props: any) => {
   const my = cy + (outerRadius + 30) * sin;
   const ex = mx + (cos >= 0 ? 1 : -1) * 22;
   const ey = my;
-  const textAnchor = cos >= 0 ? "start" : "end";
+  const textAnchor = cos >= 0 ? 'start' : 'end';
 
   return (
     <g>
@@ -86,8 +76,7 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-export function Piechart() {
-  const { user } = useUser();
+export function Piechart({ stats }: { stats: IStats }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const onPieEnter = useCallback(
     (event: React.MouseEvent<SVGElement, MouseEvent>, index: number) => {
@@ -101,7 +90,10 @@ export function Piechart() {
       <Pie
         activeIndex={activeIndex}
         activeShape={renderActiveShape}
-        data={data}
+        data={[
+          { name: 'Students', value: stats?.students ?? 0 },
+          { name: 'Staffs', value: stats?.teachers + stats?.admins ?? 0 },
+        ]}
         cx={220}
         cy={180}
         innerRadius={60}
