@@ -1,76 +1,35 @@
-"use client";
-import React, { useCallback, useEffect, useState } from "react";
+'use client';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
   useToast,
-} from "@edge-ui/react";
-import AlertPopup from "@/components/AlertDialog";
-import { Student, students } from "@/lib/api/student.api";
-import { AxiosError } from "axios";
+} from '@edge-ui/react';
+import AlertPopup from '@/components/AlertDialog';
+import { Student, students } from '@/lib/api/student.api';
+import { AxiosError } from 'axios';
 
 const ManageStudentPage = () => {
-  const demoData = [
-    {
-      id: "INV001",
-      FullName: "DemoName",
-      Email: "$250.00",
-      Course: "Credit Card",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV002",
-      FullName: "DemoName",
-      Email: "$150.00",
-      Course: "PayPal",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV003",
-      FullName: "UnDemoName",
-      Email: "$350.00",
-      Course: "Bank Transfer",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV004",
-      FullName: "DemoName",
-      Email: "$450.00",
-      Course: "Credit Card",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV005",
-      FullName: "DemoName",
-      Email: "$550.00",
-      Course: "PayPal",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV006",
-      FullName: "DemoName",
-      Email: "$200.00",
-      Course: "Bank Transfer",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV007",
-      FullName: "UnDemoName",
-      Email: "$300.00",
-      Course: "Credit Card",
-      Faculty: "BCA",
-    },
-  ];
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [studentData, setStudentData] = useState<Student[]>([]);
+  const [studentData, setStudentData] = useState<
+    {
+      id: number;
+      name: string;
+      email: string;
+      contact: string;
+      address: string;
+      course: { id: number; name: string };
+      activeSemester: { id: number; name: string };
+      password: string;
+    }[]
+  >([]);
 
   const getStudents = useCallback(async () => {
     setLoading(true);
@@ -80,11 +39,11 @@ const ManageStudentPage = () => {
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to fetch Students data",
+          'Failed to fetch Students data',
       });
     } finally {
       setLoading(false);
@@ -97,18 +56,18 @@ const ManageStudentPage = () => {
       try {
         await students.deleteStudent(id);
         toast({
-          title: "Success",
-          description: "Student deleted successfully",
+          title: 'Success',
+          description: 'Student deleted successfully',
         });
         getStudents();
       } catch (err: any) {
         const error = err as AxiosError;
         toast({
-          title: "Error",
+          title: 'Error',
           description:
             (error.response?.data as any)?.message ||
             error.message ||
-            "Failed to delete student",
+            'Failed to delete student',
         });
       } finally {
         setLoading(false);
@@ -136,7 +95,7 @@ const ManageStudentPage = () => {
             <TableHead className="font-extrabold">Full Name</TableHead>
             <TableHead className="font-extrabold">Email</TableHead>
             <TableHead className="font-extrabold">Course</TableHead>
-            <TableHead className="font-extrabold">Semester Id</TableHead>
+            <TableHead className="font-extrabold">Semester</TableHead>
             <TableHead className=" text-right font-extrabold pr-16">
               Actions
             </TableHead>
@@ -148,11 +107,11 @@ const ManageStudentPage = () => {
               <TableCell className="font-medium">{data.id}</TableCell>
               <TableCell>{data.name}</TableCell>
               <TableCell>{data.email}</TableCell>
-              <TableCell>{data.courseId}</TableCell>
-              <TableCell>{data.activeSemester}</TableCell>
+              <TableCell>{data.course?.name}</TableCell>
+              <TableCell>{data.activeSemester?.name}</TableCell>
 
               <TableCell className="text-right">
-                <Button variant={"outline"} className="w-20 mr-2">
+                <Button variant={'outline'} className="w-20 mr-2">
                   Edit
                 </Button>
                 <AlertPopup

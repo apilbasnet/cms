@@ -121,7 +121,6 @@ const AddStudentPage = () => {
   }, [toast]);
 
   useEffect(() => {
-    createStudents();
     getCourses();
   }, []);
 

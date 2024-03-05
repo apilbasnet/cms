@@ -1,4 +1,4 @@
-import { client } from "./client";
+import { client } from './client';
 
 export interface Student {
   id: number;
@@ -20,8 +20,8 @@ export const students = {
     password,
     courseId,
     activeSemester,
-  }: Omit<Student, "id">) {
-    const { data } = await client.post<Student>("/users/student", {
+  }: Omit<Student, 'id'>) {
+    const { data } = await client.post<Student>('/users/student', {
       email,
       name,
       address,
@@ -34,7 +34,18 @@ export const students = {
     return data;
   },
   async getStudent() {
-    const { data } = await client.get<Student[]>("/users/student");
+    const { data } = await client.get<
+      {
+        id: number;
+        name: string;
+        email: string;
+        contact: string;
+        address: string;
+        course: { id: number; name: string };
+        activeSemester: { id: number; name: string };
+        password: string;
+      }[]
+    >('/users/student');
 
     return data;
   },
