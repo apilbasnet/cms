@@ -1,5 +1,4 @@
-"use client";
-import React from "react";
+'use client';
 import {
   Button,
   Table,
@@ -9,90 +8,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-  Textarea,
   Select,
-  FormControl,
-  FormLabel,
-  FormField,
-  FormItem,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
   Label,
-} from "@edge-ui/react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@edge-ui/react';
+import { z } from 'zod';
 
 const notificationSchema = z.object({
   Notification: z.string().min(2, {
-    message: "Notification must be at least 2 characters.",
+    message: 'Notification must be at least 2 characters.',
   }),
 });
 
 const ViewExamResultPage = () => {
-  const demoData = [
-    {
-      id: "1",
-      FullName: "DemoName",
-      Email: "$250.00",
-      Course: "BCA",
-      Subject: "SUbject",
-      
-    },
-    {
-      id: "2",
-      FullName: "DemoName",
-      Email: "$150.00",
-      Course: "BCA",
-      Subject: "SUbject",
-    },
-    {
-      id: "3",
-      FullName: "UnDemoName",
-      Email: "$350.00",
-      Course: "BCA", 
-      Subject: "SUbject",
-    },
-    {
-      id: "4",
-      FullName: "DemoName",
-      Email: "$450.00",
-      Course: "BCA", 
-      Subject: "SUbject",
-    },
-    {
-      id: "5",
-      FullName: "DemoName",
-      Email: "$550.00",
-      Course: "BCA",
-      Subject: "SUbject",
-    },
-    {
-      id: "6",
-      FullName: "DemoName",
-      Email: "$200.00",
-      Course: "BCA",
-      Subject: "SUbject",
-    },
-    {
-      id: "7",
-      FullName: "UnDemoName",
-      Email: "$300.00",
-      Course: "BCA",
-      Subject: "SUbject",
-    },
-  ];
+  const demoData = [] as any[];
 
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
@@ -175,7 +107,7 @@ const ViewExamResultPage = () => {
               <TableCell>{data.Subject}</TableCell>
               <TableCell>{data.Course}</TableCell>
               <TableCell className="text-right">
-                <Button variant={"outline"} className="w-20 mr-2" disabled>
+                <Button variant={'outline'} className="w-20 mr-2" disabled>
                   Passed
                 </Button>
                 {/* <Button disabled>Failed</Button> */}

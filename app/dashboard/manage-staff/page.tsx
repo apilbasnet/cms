@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Button,
@@ -9,54 +9,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@edge-ui/react";
-import AlertPopup from "@/components/AlertDialog";
+} from '@edge-ui/react';
+import AlertPopup from '@/components/AlertDialog';
 
 const ManageStaffPage = () => {
-  const demoData = [
-    {
-      id: "INV001",
-      FullName: "DemoName",
-      Email: "$250.00",
-      Course: "Credit Card",
-    },
-    {
-      id: "INV002",
-      FullName: "DemoName",
-      Email: "$150.00",
-      Course: "PayPal",
-    },
-    {
-      id: "INV003",
-      FullName: "UnDemoName",
-      Email: "$350.00",
-      Course: "Bank Transfer",
-    },
-    {
-      id: "INV004",
-      FullName: "DemoName",
-      Email: "$450.00",
-      Course: "Credit Card",
-    },
-    {
-      id: "INV005",
-      FullName: "DemoName",
-      Email: "$550.00",
-      Course: "PayPal",
-    },
-    {
-      id: "INV006",
-      FullName: "DemoName",
-      Email: "$200.00",
-      Course: "Bank Transfer",
-    },
-    {
-      id: "INV007",
-      FullName: "UnDemoName",
-      Email: "$300.00",
-      Course: "Credit Card",
-    },
-  ];
+  const demoData = [] as any[];
 
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
@@ -86,7 +43,7 @@ const ManageStaffPage = () => {
               <TableCell>{data.Email}</TableCell>
               <TableCell>{data.Course}</TableCell>
               <TableCell className="text-right">
-                <Button variant={"outline"} className="w-20 mr-2">
+                <Button variant={'outline'} className="w-20 mr-2">
                   Edit
                 </Button>
                 <AlertPopup onCanceled={() => {}} onConfirmed={() => {}}>

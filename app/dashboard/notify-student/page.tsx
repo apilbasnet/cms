@@ -1,5 +1,5 @@
-"use client";
-import React from "react";
+'use client';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Table,
@@ -29,62 +29,58 @@ import {
   SelectContent,
   SelectItem,
   Label,
-} from "@edge-ui/react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+  useToast,
+} from '@edge-ui/react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { students } from '@/lib/api/student.api';
+import { AxiosError } from 'axios';
 
 const notificationSchema = z.object({
   Notification: z.string().min(2, {
-    message: "Notification must be at least 2 characters.",
+    message: 'Notification must be at least 2 characters.',
   }),
 });
 
 const NotifyStudentPage = () => {
-  const demoData = [
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [studentData, setStudentData] = useState<
     {
-      id: "1",
-      FullName: "DemoName",
-      Email: "$250.00",
-      Course: "Credit Card",
-    },
-    {
-      id: "2",
-      FullName: "DemoName",
-      Email: "$150.00",
-      Course: "PayPal",
-    },
-    {
-      id: "3",
-      FullName: "UnDemoName",
-      Email: "$350.00",
-      Course: "Bank Transfer",
-    },
-    {
-      id: "4",
-      FullName: "DemoName",
-      Email: "$450.00",
-      Course: "Credit Card",
-    },
-    {
-      id: "5",
-      FullName: "DemoName",
-      Email: "$550.00",
-      Course: "PayPal",
-    },
-    {
-      id: "6",
-      FullName: "DemoName",
-      Email: "$200.00",
-      Course: "Bank Transfer",
-    },
-    {
-      id: "7",
-      FullName: "UnDemoName",
-      Email: "$300.00",
-      Course: "Credit Card",
-    },
-  ];
+      id: number;
+      name: string;
+      email: string;
+      contact: string;
+      address: string;
+      course: { id: number; name: string };
+      activeSemester: { id: number; name: string };
+      password: string;
+    }[]
+  >([]);
+
+  const getStudents = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await students.getStudent();
+      setStudentData(data);
+    } catch (err: any) {
+      const error = err as AxiosError;
+      toast({
+        title: 'Error',
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          'Failed to fetch Students data',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  useEffect(() => {
+    getStudents();
+  }, []);
 
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
@@ -102,8 +98,8 @@ const NotifyStudentPage = () => {
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='CSIT'>CSIT</SelectItem>
-              <SelectItem value='BCA'>BCA</SelectItem>
+              <SelectItem value="CSIT">CSIT</SelectItem>
+              <SelectItem value="BCA">BCA</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -138,18 +134,20 @@ const NotifyStudentPage = () => {
             <TableHead className="font-extrabold">Full Name</TableHead>
             <TableHead className="font-extrabold">Email</TableHead>
             <TableHead className="font-extrabold">Course</TableHead>
+            <TableHead className="font-extrabold">Semester</TableHead>
             <TableHead className=" text-right font-extrabold pr-16">
               Actions
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {demoData.map((data) => (
+          {studentData.map((data) => (
             <TableRow key={data.id}>
               <TableCell className="font-medium">{data.id}</TableCell>
-              <TableCell>{data.FullName}</TableCell>
-              <TableCell>{data.Email}</TableCell>
-              <TableCell>{data.Course}</TableCell>
+              <TableCell>{data.name}</TableCell>
+              <TableCell>{data.email}</TableCell>
+              <TableCell>{data.course?.name}</TableCell>
+              <TableCell>{data.activeSemester?.name}</TableCell>
               <TableCell className="text-right">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>

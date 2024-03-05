@@ -96,7 +96,7 @@ const ManageStudentPage = () => {
             <TableHead className="font-extrabold">Email</TableHead>
             <TableHead className="font-extrabold">Course</TableHead>
             <TableHead className="font-extrabold">Semester</TableHead>
-            <TableHead className=" text-right font-extrabold pr-16">
+            <TableHead className="text-right font-extrabold pr-16">
               Actions
             </TableHead>
           </TableRow>

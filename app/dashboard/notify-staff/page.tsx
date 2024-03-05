@@ -1,11 +1,9 @@
-import React from "react";
 import {
   Button,
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -19,62 +17,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Textarea,
-} from "@edge-ui/react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@edge-ui/react';
+import { z } from 'zod';
 
 const notificationSchema = z.object({
   Notification: z.string().min(2, {
-    message: "Notification must be at least 2 characters.",
+    message: 'Notification must be at least 2 characters.',
   }),
 });
 
 const NotifyStaffPage = () => {
-  const demoData = [
-    {
-      id: "1",
-      FullName: "DemoName",
-      Email: "$250.00",
-      Course: "Credit Card",
-    },
-    {
-      id: "2",
-      FullName: "DemoName",
-      Email: "$150.00",
-      Course: "PayPal",
-    },
-    {
-      id: "3",
-      FullName: "UnDemoName",
-      Email: "$350.00",
-      Course: "Bank Transfer",
-    },
-    {
-      id: "4",
-      FullName: "DemoName",
-      Email: "$450.00",
-      Course: "Credit Card",
-    },
-    {
-      id: "5",
-      FullName: "DemoName",
-      Email: "$550.00",
-      Course: "PayPal",
-    },
-    {
-      id: "6",
-      FullName: "DemoName",
-      Email: "$200.00",
-      Course: "Bank Transfer",
-    },
-    {
-      id: "7",
-      FullName: "UnDemoName",
-      Email: "$300.00",
-      Course: "Credit Card",
-    },
-  ];
+  const demoData = [] as any[];
 
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">

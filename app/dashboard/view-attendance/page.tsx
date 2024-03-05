@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { addDays, format } from "date-fns";
-import { FaCalendarCheck as CalendarIcon } from "react-icons/fa";
-import { DateRange } from "react-day-picker";
+import * as React from 'react';
+import { addDays, format } from 'date-fns';
+import { FaCalendarCheck as CalendarIcon } from 'react-icons/fa';
+import { DateRange } from 'react-day-picker';
 
-import { Button } from "@edge-ui/react";
-import { Calendar } from "@edge-ui/react";
+import { Button } from '@edge-ui/react';
+import { Calendar } from '@edge-ui/react';
 import {
   Popover,
   PopoverContent,
@@ -24,62 +24,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@edge-ui/react";
+} from '@edge-ui/react';
 
 function ViewAttandancePage() {
   const [date, setDate] = React.useState<Date>();
 
-  const demoData = [
-    {
-      id: "INV001",
-      FullName: "DemoName",
-      Email: "$250.00",
-      Course: "Credit Card",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV002",
-      FullName: "DemoName",
-      Email: "$150.00",
-      Course: "PayPal",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV003",
-      FullName: "UnDemoName",
-      Email: "$350.00",
-      Course: "Bank Transfer",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV004",
-      FullName: "DemoName",
-      Email: "$450.00",
-      Course: "Credit Card",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV005",
-      FullName: "DemoName",
-      Email: "$550.00",
-      Course: "PayPal",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV006",
-      FullName: "DemoName",
-      Email: "$200.00",
-      Course: "Bank Transfer",
-      Faculty: "BCA",
-    },
-    {
-      id: "INV007",
-      FullName: "UnDemoName",
-      Email: "$300.00",
-      Course: "Credit Card",
-      Faculty: "BCA",
-    },
-  ];
+  const demoData = [] as any[];
 
   return (
     <div className="flex flex-col w-4/5 p-8 space-y-4">
@@ -142,13 +92,13 @@ function ViewAttandancePage() {
           <PopoverTrigger asChild>
             <Button
               id="date"
-              variant={"outline"}
+              variant={'outline'}
               className={`w-[280px] justify-start text-left font-normal ${
-                !date && "text-muted-foreground"
+                !date && 'text-muted-foreground'
               }`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {date ? format(date, 'PPP') : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -187,7 +137,7 @@ function ViewAttandancePage() {
                 <TableCell>{data.Course}</TableCell>
                 <TableCell>{data.Faculty}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant={"outline"} className="w-20 mr-2" disabled>
+                  <Button variant={'outline'} className="w-20 mr-2" disabled>
                     Present
                   </Button>
                   {/* <Button>Absent</Button> */}
