@@ -76,11 +76,11 @@ const AddStudentPage = () => {
       const data = await students.createStudent({
         name,
         email,
-        contact: `${phone}`,
-        address: `${address}`,
-        password: `${password}`,
-        courseId: Number(`${courseId}`), // Convert courseId to a number
-        activeSemester: Number(`${activeSemester}`), // Convert activeSemester to a number
+        contact: phone,
+        address: address,
+        password: password,
+        courseId: Number(courseId),
+        activeSemester: Number(activeSemester),
       });
       setStudentData([data]);
       toast({
