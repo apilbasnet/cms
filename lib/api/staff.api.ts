@@ -1,21 +1,19 @@
+import { count } from "console";
 import { client } from "./client";
 
 export interface Staff {
-  id: number;
+  id?: number;
   name: string;
   email: string;
-  phone: string;
+  contact: string;
   address: string;
+  password: string;
+  courseId: number;
 }
 
 export const staffs = {
-  async createTeacher({ name, email, phone, address }: Staff) {
-    const { data } = await client.post<Staff>("/users/teacher", {
-      name,
-      email,
-      phone,
-      address,
-    });
+  async createTeacher(body: Staff) {
+    const { data } = await client.post<Staff>("/users/teacher", body);
 
     return data;
   },
@@ -24,11 +22,11 @@ export const staffs = {
 
     return data;
   },
-  async editTeacher(id: number, { name, email, phone, address }: Staff) {
+  async editTeacher(id: number, { name, email, contact, address }: Staff) {
     const { data } = await client.patch<Staff>(`/users/teacher/${id}`, {
       name,
       email,
-      phone,
+      contact,
       address,
     });
 

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Button,
@@ -9,11 +9,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@edge-ui/react';
-import AlertPopup from '@/components/AlertDialog';
+} from "@edge-ui/react";
+import AlertPopup from "@/components/AlertDialog";
+import { useGetStaffs } from "@/lib/customHooks/getStaffs";
+import { Loading } from "@/components/loading";
 
 const ManageStaffPage = () => {
-  const demoData = [] as any[];
+  const { staffData, loading } = useGetStaffs();
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
@@ -36,14 +42,14 @@ const ManageStaffPage = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {demoData.map((data) => (
+          {staffData.map((data) => (
             <TableRow key={data.id}>
               <TableCell className="font-medium">{data.id}</TableCell>
-              <TableCell>{data.FullName}</TableCell>
-              <TableCell>{data.Email}</TableCell>
-              <TableCell>{data.Course}</TableCell>
+              <TableCell>{data.name}</TableCell>
+              <TableCell>{data.email}</TableCell>
+              <TableCell>{data.contact}</TableCell>
               <TableCell className="text-right">
-                <Button variant={'outline'} className="w-20 mr-2">
+                <Button variant={"outline"} className="w-20 mr-2">
                   Edit
                 </Button>
                 <AlertPopup onCanceled={() => {}} onConfirmed={() => {}}>

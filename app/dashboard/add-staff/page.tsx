@@ -1,12 +1,19 @@
 "use client";
 import {
   Button,
+  Checkbox,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@edge-ui/react";
 import { useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +24,8 @@ import { useState } from "react";
 import { AxiosError } from "axios";
 import { Staff, staffs } from "@/lib/api/staff.api";
 import { Spinner } from "@/components/icons/icons";
+import { useGetCourses } from "@/lib/customHooks/getCourses";
+import { Course } from "@/lib/api/course.api";
 
 const SWASTIK_TLD = "@swastikcollege.edu.np";
 
@@ -27,11 +36,10 @@ const formSchema = z.object({
   email: z.string().email().endsWith(SWASTIK_TLD, {
     message: "Email must use Swastik College's domain name.",
   }),
-  phone: z.string().length(10),
+  phone: z.number().min(10).max(10),
   address: z.string(),
   password: z.string().min(8).max(32),
-  course: z.string().length(4),
-  faculty: z.string(),
+  course: z.number(),
 });
 
 const AddStaffPage = () => {
@@ -43,6 +51,9 @@ const AddStaffPage = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [teacherData, setTeacherData] = useState<Staff[]>([]);
+  const [courseId, setCourseId] = useState(0);
+
+  const { courseData, loading: coursesLoading } = useGetCourses();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -52,13 +63,15 @@ const AddStaffPage = () => {
     setLoading(true);
     try {
       const data = await staffs.createTeacher({
-        id: 0,
         name: `${name}`,
         email: `${email}`,
-        phone: `${phone}`,
+        contact: `${phone}`,
         address: `${address}`,
+        password: `${password}`,
+        courseId: Number(courseId),
       });
       setTeacherData([data]);
+      console.log(teacherData);
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
@@ -71,13 +84,11 @@ const AddStaffPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [toast, name, email, phone, address]);
+  }, [toast, name, email, phone, address, password, courseId, teacherData]);
 
   const onSubmit = () => {
     addTeachers();
   };
-
-  console.log(teacherData);
 
   return (
     <div className="flex items-center justify-start flex-col gap-4 w-full py-8 ">
@@ -103,6 +114,7 @@ const AddStaffPage = () => {
                     }}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -122,6 +134,7 @@ const AddStaffPage = () => {
                     }}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -137,10 +150,11 @@ const AddStaffPage = () => {
                     type="tel"
                     {...field}
                     onChange={(e) => {
-                      setPhone(e.target.value);
+                      setPhone(String(e.target.value));
                     }}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -160,6 +174,7 @@ const AddStaffPage = () => {
                     }}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -179,11 +194,73 @@ const AddStaffPage = () => {
                     }}
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="course"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="course">Course</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={(e) => setCourseId(Number(e))}
+                    value={String(courseId)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Course name" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {courseData.map((course) => (
+                        <SelectItem key={course.id} value={String(course.id)}>
+                          {course.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
               </FormItem>
             )}
           />
 
-          <Button disabled={loading} onClick={addTeachers} className="w-full">
+          {/* <FormField
+            control={form.control}
+            name="faculty"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="subject">Subjects</FormLabel>
+                <FormControl>
+                  <Select onValueChange={field.onChange}>
+                    <div className="flex space-x-2">
+                      {subjectData.map((subject) => (
+                        <div
+                          key={subject.id}
+                          className="flex  items-center space-x-2"
+                        >
+                          <Checkbox id={subject.name} />
+                          <label
+                            htmlFor={subject.name}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {subject.name}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          /> */}
+
+          <Button
+            disabled={loading}
+            onClick={addTeachers}
+            type="submit"
+            className="w-full"
+          >
             {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
             Create
           </Button>

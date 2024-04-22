@@ -1,61 +1,74 @@
 "use client";
+import { useCallback, useEffect, useState } from "react";
 import {
   Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  useToast,
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
   Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Checkbox,
 } from "@edge-ui/react";
-import React, { useState, useCallback, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Course, courses } from "@/lib/api/course.api";
+import { Loading } from "@/components/loading";
+import { Subject, subjects } from "@/lib/api/subject.api";
 import { AxiosError } from "axios";
-import { useToast } from "@edge-ui/react";
-
-const SWASTIK_TLD = "@swastikcollege.edu.np";
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  staff: z.string(),
-  faculty: z.boolean(),
-});
+import { useRouter } from "next/navigation";
+import { useUser } from "@/lib/context/UserContext";
+import SubjectAdd from "./(comp)/SubjectAdd";
+import { useGetSubjects } from "@/lib/customHooks/getSubject";
 
 const SubjectPage = () => {
-  const [loading, setLoading] = useState(true);
-  const [courseData, setCourseData] = useState<Course[]>([]);
+  const { subjectData, loading: subjectLoading } = useGetSubjects();
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useUser();
+  const { getSubjects } = useGetSubjects();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {},
-  });
+  const [editSubjectName, setEditSubjectName] = useState("");
+  const editSubject = useCallback(async (id: number) => {
+    // try {
+    //   setLoading(true);
+    //   await subjects.editSubject(id, { name: editSubjectName });
+    //   toast({
+    //     title: "Success",
+    //     description: "Subject updated successfully",
+    //   });
+    //   getSubjects();
+    // } catch (err: any) {
+    //   const error = err as AxiosError;
+    //   toast({
+    //     title: "Error",
+    //     description:
+    //       (error.response?.data as any)?.message ||
+    //       error.message ||
+    //       "Failed to update subject",
+    //   });
+    // } finally {
+    //   setLoading(false);
+    // }
+  }, []);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // const result = await supabase.auth.admin.createUser({
-    //   user_metadata: values,
-    //   email_confirm: false,
-    //   role: "student",
-    // });
-    // console.log(result);
-  };
-
-  const getCourses = useCallback(async () => {
-    setLoading(true);
+  const deleteSubject = useCallback(async (id: number) => {
     try {
-      const data = await courses.getCourses();
-      setCourseData(data);
+      setLoading(true);
+      await subjects.deleteSubject(id);
+      toast({
+        title: "Success",
+        description: "Subject deleted successfully",
+      });
+      getSubjects();
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
@@ -63,94 +76,111 @@ const SubjectPage = () => {
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to fetch courses",
+          "Failed to delete subject",
       });
     } finally {
       setLoading(false);
     }
-  }, [toast]);
-
-  useEffect(() => {
-    getCourses();
   }, []);
 
+  if (loading) return <Loading />;
+
   return (
-    <div className="flex items-center justify-start flex-col gap-4 w-full py-8 ">
-      <h1 className="font-medium text-xl">Add Subject</h1>
-      <Form {...form}>
-        <form
-          className="w-1/2 space-y-4"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="name">Name</FormLabel>
-                <FormControl>
-                  <Input id="name" type="text" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="staff"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="course">Staffs</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select Staff" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="...">.......</SelectItem>
-                      <SelectItem value="...">.......</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="faculty"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="course">Courses</FormLabel>
-                <FormControl>
-                  <Select onValueChange={field.onChange}>
-                    {courseData.map((course) => (
-                      <div
-                        key={course.id}
-                        className="flex items-center space-x-2 mb-4  "
-                      >
-                        <Checkbox id={course.name} />
-                        <label
-                          htmlFor={course.name}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {course.name}
-                        </label>
-                      </div>
-                    ))}
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <Button className="w-full">Create</Button>
-        </form>
-      </Form>
-    </div>
+    <>
+      <div className="flex flex-col justify-start items-center w-5/6 py-8 px-8">
+        <div>
+          <h1 className="font-medium text-xl ">
+            {user?.role === "ADMIN" ? "Manage Subjects" : "Subjects"}
+          </h1>
+        </div>
+        {user?.role === "ADMIN" ? <SubjectAdd refresh={getSubjects} /> : null}
+        <Table className="border rounded-2xl">
+          <TableCaption className="mt-5">
+            A list of the subjects presented in Swastik College
+          </TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="font-extrabold">ID</TableHead>
+              <TableHead className="font-extrabold">Course</TableHead>
+              {user?.role === "ADMIN" ? (
+                <TableHead className="font-extrabold text-right pr-16">
+                  Actions
+                </TableHead>
+              ) : null}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {subjectData.map((data) => (
+              <TableRow key={data.id}>
+                <TableCell className="font-medium">{data.id}</TableCell>
+                <TableCell>{data.name}</TableCell>
+                {user?.role === "ADMIN" ? (
+                  <TableCell className="text-right ">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="secondary" className="mr-2">
+                          Edit
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            <Input
+                              type="text"
+                              placeholder="Subject"
+                              value={editSubjectName}
+                              onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ) => setEditSubjectName(event.target.value)}
+                            />
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => editSubject(data.id)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive">Delete</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account and remove your data from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteSubject(data.id)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                ) : null}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 };
 

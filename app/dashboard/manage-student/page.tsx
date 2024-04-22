@@ -1,7 +1,15 @@
-'use client';
-import { useCallback, useEffect, useState } from 'react';
+"use client";
+import { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
   Button,
+  Input,
   Table,
   TableBody,
   TableCaption,
@@ -10,14 +18,16 @@ import {
   TableHeader,
   TableRow,
   useToast,
-} from '@edge-ui/react';
-import AlertPopup from '@/components/AlertDialog';
-import { Student, students } from '@/lib/api/student.api';
-import { AxiosError } from 'axios';
+} from "@edge-ui/react";
+import AlertPopup from "@/components/AlertDialog";
+import { Student, students } from "@/lib/api/student.api";
+import { StudentEdit } from "./(edit)/StudentEdit";
+import { AxiosError } from "axios";
 
 const ManageStudentPage = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [studentData, setStudentData] = useState<
     {
       id: number;
@@ -39,11 +49,11 @@ const ManageStudentPage = () => {
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: 'Error',
+        title: "Error",
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          'Failed to fetch Students data',
+          "Failed to fetch Students data",
       });
     } finally {
       setLoading(false);
@@ -56,18 +66,18 @@ const ManageStudentPage = () => {
       try {
         await students.deleteStudent(id);
         toast({
-          title: 'Success',
-          description: 'Student deleted successfully',
+          title: "Success",
+          description: "Student deleted successfully",
         });
         getStudents();
       } catch (err: any) {
         const error = err as AxiosError;
         toast({
-          title: 'Error',
+          title: "Error",
           description:
             (error.response?.data as any)?.message ||
             error.message ||
-            'Failed to delete student',
+            "Failed to delete student",
         });
       } finally {
         setLoading(false);
@@ -111,9 +121,22 @@ const ManageStudentPage = () => {
               <TableCell>{data.activeSemester?.name}</TableCell>
 
               <TableCell className="text-right">
-                <Button variant={'outline'} className="w-20 mr-2">
-                  Edit
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="mr-2 w-20">
+                      Edit
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <StudentEdit
+                      student={data}
+                      onDone={() => {
+                        setIsEditing(false);
+                      }}
+                    />
+                  </AlertDialogContent>
+                </AlertDialog>
+
                 <AlertPopup
                   onCanceled={() => {}}
                   onConfirmed={() => {
