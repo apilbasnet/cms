@@ -1,6 +1,9 @@
 "use client";
 
 import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
   Button,
   Table,
   TableBody,
@@ -13,8 +16,11 @@ import {
 import AlertPopup from "@/components/AlertDialog";
 import { useGetStaffs } from "@/lib/customHooks/getStaffs";
 import { Loading } from "@/components/loading";
+import { StaffEdit } from "./(edit)/StaffEdit";
+import { useState } from "react";
 
 const ManageStaffPage = () => {
+  const [isEditing, setIsEditing] = useState(false);
   const { staffData, loading } = useGetStaffs();
 
   if (loading) {
@@ -50,7 +56,21 @@ const ManageStaffPage = () => {
               <TableCell>{data.contact}</TableCell>
               <TableCell className="text-right">
                 <Button variant={"outline"} className="w-20 mr-2">
-                  Edit
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="mr-2 w-20">
+                        Edit
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <StaffEdit
+                        staff={data}
+                        onDone={() => {
+                          setIsEditing(false);
+                        }}
+                      />
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </Button>
                 <AlertPopup onCanceled={() => {}} onConfirmed={() => {}}>
                   <Button variant="destructive">Delete</Button>

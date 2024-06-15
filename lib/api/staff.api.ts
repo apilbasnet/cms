@@ -7,7 +7,7 @@ export interface Staff {
   email: string;
   contact: string;
   address: string;
-  password: string;
+  password?: string;
   courseId: number;
 }
 
