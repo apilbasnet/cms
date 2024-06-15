@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/context/UserContext";
 import SubjectAdd from "./(comp)/SubjectAdd";
 import { useGetSubjects } from "@/lib/customHooks/getSubject";
+import { useGetCourses } from "@/lib/customHooks/getCourses";
 
 const SubjectPage = () => {
   const { subjectData, loading: subjectLoading } = useGetSubjects();
@@ -35,6 +36,7 @@ const SubjectPage = () => {
   const { toast } = useToast();
   const { user } = useUser();
   const { getSubjects } = useGetSubjects();
+  const { courseData } = useGetCourses();
 
   const [editSubjectName, setEditSubjectName] = useState("");
   const editSubject = useCallback(async (id: number) => {
@@ -59,6 +61,8 @@ const SubjectPage = () => {
     //   setLoading(false);
     // }
   }, []);
+
+  console.log(courseData);
 
   const deleteSubject = useCallback(async (id: number) => {
     try {
@@ -101,7 +105,10 @@ const SubjectPage = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="font-extrabold">ID</TableHead>
+              <TableHead className="font-extrabold">Subject</TableHead>
               <TableHead className="font-extrabold">Course</TableHead>
+              <TableHead className="font-extrabold">Semester</TableHead>
+              {/* <TableHead className="font-extrabold">Teacher</TableHead> */}
               {user?.role === "ADMIN" ? (
                 <TableHead className="font-extrabold text-right pr-16">
                   Actions
@@ -114,6 +121,18 @@ const SubjectPage = () => {
               <TableRow key={data.id}>
                 <TableCell className="font-medium">{data.id}</TableCell>
                 <TableCell>{data.name}</TableCell>
+                <TableCell>
+                  {/* {data.courseId} */}
+                  {courseData.map((course) => {
+                    if (course.id === data.courseId) {
+                      return course.name;
+                    }
+                  })}
+                </TableCell>
+                <TableCell>
+                  {data.semesterId}
+                  {"'th Semester"}
+                </TableCell>
                 {user?.role === "ADMIN" ? (
                   <TableCell className="text-right ">
                     <AlertDialog>

@@ -92,7 +92,7 @@ export default function SubjectAdd({ refresh }: { refresh: () => void }) {
           "Failed to fetch subjects",
       });
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     getSubjects();
@@ -133,7 +133,7 @@ export default function SubjectAdd({ refresh }: { refresh: () => void }) {
                       onValueChange={(e) => setSemesterId(Number(e))}
                       value={String(semesterId)}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-36">
                         <SelectValue placeholder="Semester" />
                       </SelectTrigger>
                       <SelectContent>
@@ -159,7 +159,7 @@ export default function SubjectAdd({ refresh }: { refresh: () => void }) {
                       onValueChange={(e) => setCourseId(Number(e))}
                       value={String(courseId)}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-32">
                         <SelectValue placeholder="Course" />
                       </SelectTrigger>
                       <SelectContent>
@@ -186,7 +186,7 @@ export default function SubjectAdd({ refresh }: { refresh: () => void }) {
                       onValueChange={(e) => setTeacherId(Number(e))}
                       value={String(teacherId)}
                     >
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-32">
                         <SelectValue placeholder="Teacher name" />
                       </SelectTrigger>
                       <SelectContent>

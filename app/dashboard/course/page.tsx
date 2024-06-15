@@ -27,6 +27,13 @@ import { AxiosError } from "axios";
 import CourseAdd from "./(comp)/CourseAdd";
 import { useUser } from "@/lib/context/UserContext";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
+import z from "zod";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+});
 
 const CoursePage = () => {
   // const [courseData, setCourseData] = useState<Course[]>([]);
