@@ -9,7 +9,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Table,
   TableBody,
   TableCaption,
@@ -17,17 +26,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  cn,
   useToast,
 } from "@edge-ui/react";
 import AlertPopup from "@/components/AlertDialog";
 import { Student, students } from "@/lib/api/student.api";
 import { StudentEdit } from "./(edit)/StudentEdit";
 import { AxiosError } from "axios";
+import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
+import { useGetCourses } from "@/lib/customHooks/getCourses";
 
 const ManageStudentPage = () => {
+  const { courseData, loading: courseLoading } = useGetCourses();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [nameFilter, setNameFilter] = useState("");
+  const [semesterFilter, setSemesterFilter] = useState("All");
+  const [courseFilter, setCourseFilter] = useState("All");
   const [studentData, setStudentData] = useState<
     {
       id: number;
@@ -90,10 +106,158 @@ const ManageStudentPage = () => {
     getStudents();
   }, []);
 
+  const filteredStudentData = studentData.filter((data) => {
+    if (courseFilter === "All" && semesterFilter === "All") {
+      return data.name.toLowerCase().includes(nameFilter.toLowerCase());
+    } else {
+      return (
+        data.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+        (semesterFilter === "All" ||
+          data.activeSemester?.name === semesterFilter) &&
+        (courseFilter === "All" || data.course?.name === courseFilter)
+      );
+    }
+  });
+
+  console.log(filteredStudentData);
+
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
       <div>
         <h1 className="font-medium text-xl pb-5">Manage Student</h1>
+      </div>
+      <div className="flex  w-full justify-start mb-4 gap-4 ">
+        <Input
+          placeholder="Search by name"
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+          className="w-52"
+        />
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="h-9   border-dashed">
+              <PlusCircledIcon className="mr-2 h-4 w-4" />
+              Semester
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search " />
+              <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup title="Semester">
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("All")}
+                    className={cn(semesterFilter === "All" && "bg-gray-100")}
+                  >
+                    All
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 1")}
+                    className={cn(
+                      semesterFilter === "Semester 1" && "bg-gray-100"
+                    )}
+                  >
+                    First Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 2")}
+                    className={cn(
+                      semesterFilter === "Semester 2" && "bg-gray-100"
+                    )}
+                  >
+                    Second Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 3")}
+                    className={cn(
+                      semesterFilter === "Semester 3" && "bg-gray-100"
+                    )}
+                  >
+                    Third Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 4")}
+                    className={cn(
+                      semesterFilter === "Semester 4" && "bg-gray-100"
+                    )}
+                  >
+                    Fourth Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 5")}
+                    className={cn(
+                      semesterFilter === "Semester 5" && "bg-gray-100"
+                    )}
+                  >
+                    Fifth Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 6")}
+                    className={cn(
+                      semesterFilter === "Semester 6" && "bg-gray-100"
+                    )}
+                  >
+                    Sixth Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 7")}
+                    className={cn(
+                      semesterFilter === "Semester 7" && "bg-gray-100"
+                    )}
+                  >
+                    Seventh Semester
+                  </CommandItem>
+                  <CommandItem
+                    onSelect={() => setSemesterFilter("Semester 8")}
+                    className={cn(
+                      semesterFilter === "Semester 8" && "bg-gray-100"
+                    )}
+                  >
+                    Eighth Semester
+                  </CommandItem>
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="h-9   border-dashed">
+              <PlusCircledIcon className="mr-2 h-4 w-4" />
+              Course
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search " />
+              <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup title="Course">
+                  <CommandItem
+                    onSelect={() => setCourseFilter("All")}
+                    className={cn(courseFilter === "All" && "bg-gray-100")}
+                  >
+                    All
+                  </CommandItem>
+                  {courseData.map((course) => (
+                    <CommandItem
+                      key={course.id}
+                      onSelect={() => setCourseFilter(course.name)}
+                      className={cn(
+                        courseFilter === course.name && "bg-gray-100"
+                      )}
+                    >
+                      {course.name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       <Table className="border rounded-2xl">
         <TableCaption className="mt-5">
@@ -112,47 +276,89 @@ const ManageStudentPage = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {studentData.map((data) => (
-            <TableRow key={data.id}>
-              <TableCell className="font-medium">{data.id}</TableCell>
-              <TableCell>{data.name}</TableCell>
-              <TableCell>{data.email}</TableCell>
-              <TableCell>{data.course?.name}</TableCell>
-              <TableCell>{data.activeSemester?.name}</TableCell>
+          {semesterFilter === "All" && courseFilter === "All"
+            ? studentData.map((data) => (
+                <TableRow key={data.id}>
+                  <TableCell className="font-medium">{data.id}</TableCell>
+                  <TableCell>{data.name}</TableCell>
+                  <TableCell>{data.email}</TableCell>
+                  <TableCell>{data.course?.name}</TableCell>
+                  <TableCell>{data.activeSemester?.name}</TableCell>
 
-              <TableCell className="text-right">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="mr-2 w-20">
-                      Edit
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <StudentEdit
-                      student={data}
-                      onDone={() => {
-                        setIsEditing(false);
+                  <TableCell className="text-right">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" className="mr-2 w-20">
+                          Edit
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <StudentEdit
+                          student={data}
+                          onDone={() => {
+                            setIsEditing(false);
+                          }}
+                        />
+                      </AlertDialogContent>
+                    </AlertDialog>
+
+                    <AlertPopup
+                      onCanceled={() => {}}
+                      onConfirmed={() => {
+                        deleteStudent(data.id);
                       }}
-                    />
-                  </AlertDialogContent>
-                </AlertDialog>
+                    >
+                      <Button
+                        variant="destructive"
+                        // onClick={() => deleteStudent(data.id)}
+                      >
+                        Delete
+                      </Button>
+                    </AlertPopup>
+                  </TableCell>
+                </TableRow>
+              ))
+            : filteredStudentData.map((data) => (
+                <TableRow key={data.id}>
+                  <TableCell className="font-medium">{data.id}</TableCell>
+                  <TableCell>{data.name}</TableCell>
+                  <TableCell>{data.email}</TableCell>
+                  <TableCell>{data.course?.name}</TableCell>
+                  <TableCell>{data.activeSemester?.name}</TableCell>
 
-                <AlertPopup
-                  onCanceled={() => {}}
-                  onConfirmed={() => {
-                    deleteStudent(data.id);
-                  }}
-                >
-                  <Button
-                    variant="destructive"
-                    // onClick={() => deleteStudent(data.id)}
-                  >
-                    Delete
-                  </Button>
-                </AlertPopup>
-              </TableCell>
-            </TableRow>
-          ))}
+                  <TableCell className="text-right">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" className="mr-2 w-20">
+                          Edit
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <StudentEdit
+                          student={data}
+                          onDone={() => {
+                            setIsEditing(false);
+                          }}
+                        />
+                      </AlertDialogContent>
+                    </AlertDialog>
+
+                    <AlertPopup
+                      onCanceled={() => {}}
+                      onConfirmed={() => {
+                        deleteStudent(data.id);
+                      }}
+                    >
+                      <Button
+                        variant="destructive"
+                        // onClick={() => deleteStudent(data.id)}
+                      >
+                        Delete
+                      </Button>
+                    </AlertPopup>
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
     </div>
