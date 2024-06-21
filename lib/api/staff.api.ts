@@ -22,12 +22,16 @@ export const staffs = {
 
     return data;
   },
-  async editTeacher(id: number, { name, email, contact, address }: Staff) {
+  async editTeacher(
+    id: number,
+    { name, email, contact, address, courseId }: Staff
+  ) {
     const { data } = await client.patch<Staff>(`/users/teacher/${id}`, {
       name,
       email,
       contact,
       address,
+      courseId,
     });
 
     return data;

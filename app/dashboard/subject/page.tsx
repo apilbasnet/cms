@@ -80,8 +80,6 @@ const SubjectPage = () => {
     }
   }, []);
 
-  console.log(courseData);
-
   const deleteSubject = useCallback(async (id: number) => {
     try {
       setLoading(true);
@@ -106,6 +104,8 @@ const SubjectPage = () => {
   }, []);
 
   if (loading) return <Loading />;
+
+  console.log(editSubjectName, courseId, semesterId, teacherId, code);
 
   return (
     <>

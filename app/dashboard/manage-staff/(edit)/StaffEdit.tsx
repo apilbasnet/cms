@@ -36,8 +36,11 @@ type StaffEditProps = {
     email: string;
     contact: string;
     address: string;
-
-    courseId: number;
+    password: string;
+    course: {
+      id: number;
+      name: string;
+    };
   };
   onDone: () => void;
 };
@@ -49,7 +52,7 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
   const [phone, setPhone] = useState(`${staff.contact}`);
   const [address, setAddress] = useState(`${staff.address}`);
   const [loading, setLoading] = useState(false);
-  const [courseId, setCourseId] = useState(staff.courseId);
+  const [courseId, setCourseId] = useState(staff.course.id);
 
   const { courseData, loading: CoursesLoading } = useGetCourses();
 
@@ -206,7 +209,7 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
                   <FormControl>
                     <Select
                       onValueChange={(e) => setCourseId(Number(e))}
-                      defaultValue={String(staff.courseId)}
+                      defaultValue={String(staff.course.id)}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Course name" />

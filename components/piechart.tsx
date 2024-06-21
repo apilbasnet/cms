@@ -1,7 +1,7 @@
-'use client';
-import React, { useCallback, useState } from 'react';
-import { PieChart, Pie, Sector } from 'recharts';
-import { IStats } from '@/lib/api/user.api';
+"use client";
+import React, { useCallback, useState } from "react";
+import { PieChart, Pie, Sector } from "recharts";
+import { IStats } from "@/lib/api/user.api";
 
 const renderActiveShape = (props: any) => {
   const RADIAN = Math.PI / 180;
@@ -26,7 +26,7 @@ const renderActiveShape = (props: any) => {
   const my = cy + (outerRadius + 30) * sin;
   const ex = mx + (cos >= 0 ? 1 : -1) * 22;
   const ey = my;
-  const textAnchor = cos >= 0 ? 'start' : 'end';
+  const textAnchor = cos >= 0 ? "start" : "end";
 
   return (
     <g>
@@ -91,8 +91,8 @@ export function Piechart({ stats }: { stats: IStats }) {
         activeIndex={activeIndex}
         activeShape={renderActiveShape}
         data={[
-          { name: 'Students', value: stats?.students ?? 0 },
-          { name: 'Staffs', value: stats?.teachers + stats?.admins ?? 0 },
+          { name: "Students", value: stats?.students ?? 0 },
+          { name: "Staffs", value: stats?.teachers + stats?.admins ?? 0 },
         ]}
         cx={220}
         cy={180}

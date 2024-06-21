@@ -35,6 +35,7 @@ import { StudentEdit } from "./(edit)/StudentEdit";
 import { AxiosError } from "axios";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
+import { get } from "http";
 
 const ManageStudentPage = () => {
   const { courseData, loading: courseLoading } = useGetCourses();
@@ -118,8 +119,6 @@ const ManageStudentPage = () => {
       );
     }
   });
-
-  console.log(filteredStudentData);
 
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
@@ -275,90 +274,51 @@ const ManageStudentPage = () => {
             </TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {semesterFilter === "All" && courseFilter === "All"
-            ? studentData.map((data) => (
-                <TableRow key={data.id}>
-                  <TableCell className="font-medium">{data.id}</TableCell>
-                  <TableCell>{data.name}</TableCell>
-                  <TableCell>{data.email}</TableCell>
-                  <TableCell>{data.course?.name}</TableCell>
-                  <TableCell>{data.activeSemester?.name}</TableCell>
+          {filteredStudentData.map((data) => (
+            <TableRow key={data.id}>
+              <TableCell className="font-medium">{data.id}</TableCell>
+              <TableCell>{data.name}</TableCell>
+              <TableCell>{data.email}</TableCell>
+              <TableCell>{data.course?.name}</TableCell>
+              <TableCell>{data.activeSemester?.name}</TableCell>
 
-                  <TableCell className="text-right">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" className="mr-2 w-20">
-                          Edit
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <StudentEdit
-                          student={data}
-                          onDone={() => {
-                            setIsEditing(false);
-                          }}
-                        />
-                      </AlertDialogContent>
-                    </AlertDialog>
-
-                    <AlertPopup
-                      onCanceled={() => {}}
-                      onConfirmed={() => {
-                        deleteStudent(data.id);
-                      }}
+              <TableCell className="text-right">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="mr-2 w-20"
+                      onClick={() => setIsEditing(true)}
                     >
-                      <Button
-                        variant="destructive"
-                        // onClick={() => deleteStudent(data.id)}
-                      >
-                        Delete
-                      </Button>
-                    </AlertPopup>
-                  </TableCell>
-                </TableRow>
-              ))
-            : filteredStudentData.map((data) => (
-                <TableRow key={data.id}>
-                  <TableCell className="font-medium">{data.id}</TableCell>
-                  <TableCell>{data.name}</TableCell>
-                  <TableCell>{data.email}</TableCell>
-                  <TableCell>{data.course?.name}</TableCell>
-                  <TableCell>{data.activeSemester?.name}</TableCell>
+                      Edit
+                    </Button>
+                  </AlertDialogTrigger>
+                  {isEditing && (
+                    <AlertDialogContent>
+                      <StudentEdit
+                        student={data}
+                        onDone={() => {
+                          setIsEditing(false);
+                          getStudents();
+                        }}
+                      />
+                    </AlertDialogContent>
+                  )}
+                </AlertDialog>
 
-                  <TableCell className="text-right">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" className="mr-2 w-20">
-                          Edit
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <StudentEdit
-                          student={data}
-                          onDone={() => {
-                            setIsEditing(false);
-                          }}
-                        />
-                      </AlertDialogContent>
-                    </AlertDialog>
-
-                    <AlertPopup
-                      onCanceled={() => {}}
-                      onConfirmed={() => {
-                        deleteStudent(data.id);
-                      }}
-                    >
-                      <Button
-                        variant="destructive"
-                        // onClick={() => deleteStudent(data.id)}
-                      >
-                        Delete
-                      </Button>
-                    </AlertPopup>
-                  </TableCell>
-                </TableRow>
-              ))}
+                <AlertPopup
+                  onCanceled={() => {}}
+                  onConfirmed={() => {
+                    deleteStudent(data.id);
+                  }}
+                >
+                  <Button variant="destructive">Delete</Button>
+                </AlertPopup>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
