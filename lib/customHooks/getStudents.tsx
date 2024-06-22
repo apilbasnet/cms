@@ -42,5 +42,5 @@ export const useGetStudents = () => {
     getCourses();
   }, []);
 
-  return { loading, studentData };
+  return { loading, studentData, refetch: getCourses };
 };

@@ -105,7 +105,9 @@ const SubjectPage = () => {
 
   if (loading) return <Loading />;
 
-  console.log(editSubjectName, courseId, semesterId, teacherId, code);
+  const filteredSubjects = subjectData.sort(
+    (a, b) => a.semesterId - b.semesterId
+  );
 
   return (
     <>
@@ -135,7 +137,7 @@ const SubjectPage = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {subjectData.map((data) => (
+            {filteredSubjects.map((data) => (
               <TableRow key={data.id}>
                 <TableCell className="font-medium">{data.id}</TableCell>
                 <TableCell>{data.name}</TableCell>

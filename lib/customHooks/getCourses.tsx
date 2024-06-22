@@ -31,5 +31,5 @@ export const useGetCourses = () => {
     getCourses();
   }, []);
 
-  return { loading, courseData, getCourses };
+  return { loading, courseData };
 };

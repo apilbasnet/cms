@@ -19,6 +19,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  SelectItem,
   Table,
   TableBody,
   TableCaption,
@@ -35,7 +36,6 @@ import { StudentEdit } from "./(edit)/StudentEdit";
 import { AxiosError } from "axios";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
-import { get } from "http";
 
 const ManageStudentPage = () => {
   const { courseData, loading: courseLoading } = useGetCourses();
@@ -125,6 +125,7 @@ const ManageStudentPage = () => {
       <div>
         <h1 className="font-medium text-xl pb-5">Manage Student</h1>
       </div>
+
       <div className="flex  w-full justify-start mb-4 gap-4 ">
         <Input
           placeholder="Search by name"
@@ -151,7 +152,18 @@ const ManageStudentPage = () => {
                     className={cn(semesterFilter === "All" && "bg-gray-100")}
                   >
                     All
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "All"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
+
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 1")}
                     className={cn(
@@ -159,6 +171,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     First Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 1"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 2")}
@@ -167,6 +189,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Second Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 2"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 3")}
@@ -175,6 +207,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Third Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 3"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 4")}
@@ -183,6 +225,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Fourth Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 4"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 5")}
@@ -191,6 +243,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Fifth Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 5"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 6")}
@@ -199,6 +261,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Sixth Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 6"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 7")}
@@ -207,6 +279,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Seventh Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 7"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                   <CommandItem
                     onSelect={() => setSemesterFilter("Semester 8")}
@@ -215,6 +297,16 @@ const ManageStudentPage = () => {
                     )}
                   >
                     Eighth Semester
+                    <div
+                      className={cn(
+                        "absolute right-2 top-2 rounded-full bg-white border-2 border-primary-foreground  ",
+                        semesterFilter === "Semester 8"
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <CheckIcon className={cn("h-4 w-4")} />
+                    </div>
                   </CommandItem>
                 </CommandGroup>
               </CommandList>

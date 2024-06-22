@@ -44,6 +44,7 @@ type StudentEditProps = {
 };
 
 export const StudentEdit = ({ student, onDone }: StudentEditProps) => {
+  // console.log(student);
   const { toast } = useToast();
   const [name, setName] = useState(`${student.name}`);
   const [email, setEmail] = useState(`${student.email}`);
