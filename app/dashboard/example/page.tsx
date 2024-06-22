@@ -6,8 +6,10 @@ import { useGetStudents } from "@/lib/customHooks/getStudents";
 import { Loading } from "@/components/loading";
 import { useCallback, useState } from "react";
 import { students } from "@/lib/api/student.api";
-import { useToast } from "@edge-ui/react";
+import { AlertDialog, AlertDialogContent, useToast } from "@edge-ui/react";
 import { AxiosError } from "axios";
+import { StudentEdit } from "../manage-student/(edit)/StudentEdit";
+import { set } from "zod";
 
 type Student = {
   id: number;
@@ -24,6 +26,8 @@ export default function TaskPage() {
   const { toast } = useToast();
   const { studentData, loading: fetching, refetch } = useGetStudents();
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [data, setData] = useState<Student | null>(null);
 
   const isLoading = fetching || loading;
 
@@ -50,12 +54,15 @@ export default function TaskPage() {
         setLoading(false);
       }
     },
-    [toast]
+    [toast, refetch]
   );
 
-  const onEdit = useCallback((data: Student) => {
-    console.log("yo ta edit ko id ", data);
+  const onEdit = useCallback(async (data: Student) => {
+    setData(data);
+    setIsEditing(!isEditing);
   }, []);
+
+  console.log(data, isEditing);
 
   const columnsWithActions = columns({ onEdit, onDelete });
 
@@ -75,6 +82,10 @@ export default function TaskPage() {
           </div>
         </div>
         <DataTable data={studentData} columns={columnsWithActions} />
+
+        {isEditing && data && (
+          <StudentEdit student={data} onDone={() => setIsEditing(false)} />
+        )}
       </div>
     </>
   );

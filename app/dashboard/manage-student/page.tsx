@@ -120,6 +120,8 @@ const ManageStudentPage = () => {
     }
   });
 
+  console.log(isEditing);
+
   return (
     <div className="flex flex-col justify-start items-center w-4/5 p-8">
       <div>

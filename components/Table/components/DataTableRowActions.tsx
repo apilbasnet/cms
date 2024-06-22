@@ -53,7 +53,6 @@ export function DataTableRowActions<TData>({
   onDelete,
 }: DataTableRowActionsProps<TData>) {
   const data = row.original as Student;
-  console.log(data);
 
   return (
     <DropdownMenu>
