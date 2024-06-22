@@ -6,7 +6,20 @@ import { useToast } from "@edge-ui/react";
 export const useGetStaffs = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [staffData, setStaffData] = useState<Staff[]>([]);
+  const [staffData, setStaffData] = useState<
+    {
+      id: number;
+      name: string;
+      email: string;
+      contact: string;
+      address: string;
+      course: {
+        id: number;
+        name: string;
+      };
+      password: string;
+    }[]
+  >([]);
 
   const getStaffs = useCallback(async () => {
     setLoading(true);
@@ -31,5 +44,5 @@ export const useGetStaffs = () => {
     getStaffs();
   }, []);
 
-  return { loading, staffData };
+  return { loading, staffData, refetch: getStaffs };
 };

@@ -122,119 +122,132 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center ">
-      <AlertDialogTitle>Edit Staff</AlertDialogTitle>
-      <AlertDialogDescription className="w-5/6">
-        <Form {...form}>
-          <form className="space-y-2">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="name">Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="name"
-                      type="text"
-                      {...field}
-                      onChange={(event) => setName(event.target.value)}
-                      defaultValue={staff.name}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="email"
-                      type="email"
-                      {...field}
-                      onChange={(event) => setEmail(event.target.value)}
-                      defaultValue={staff.email}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="phone">Phone</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      {...field}
-                      onChange={(event) => setPhone(event.target.value)}
-                      defaultValue={staff.contact}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="address">Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      id="address"
-                      type="text"
-                      {...field}
-                      onChange={(event) => setAddress(event.target.value)}
-                      defaultValue={staff.address}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+    <div className="fixed inset-[-100px] bg-black bg-opacity-50 flex justify-center items-center ">
+      <div className="bg-white p-4 rounded-lg shadow-lg space-y-4 w-2/5 max-w-4xl">
+        <div className="flex flex-col items-center justify-center ">
+          <div>Edit Staff</div>
+          <div className="w-5/6">
+            <Form {...form}>
+              <form className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="name">Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="name"
+                          type="text"
+                          {...field}
+                          onChange={(event) => setName(event.target.value)}
+                          defaultValue={staff.name}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="email">Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="email"
+                          type="email"
+                          {...field}
+                          onChange={(event) => setEmail(event.target.value)}
+                          defaultValue={staff.email}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="phone">Phone</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          {...field}
+                          onChange={(event) => setPhone(event.target.value)}
+                          defaultValue={staff.contact}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="address">Address</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="address"
+                          type="text"
+                          {...field}
+                          onChange={(event) => setAddress(event.target.value)}
+                          defaultValue={staff.address}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="course"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="course">Course</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(e) => setCourseId(Number(e))}
-                      defaultValue={String(staff.course.id)}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Course name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {courseData.map((course) => (
-                          <SelectItem key={course.id} value={String(course.id)}>
-                            {course.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-      </AlertDialogDescription>
-      <div className="mt-4 space-x-2">
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
-        <Button disabled={loading} onClick={requestEdit}>
-          {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
-          Continue
-        </Button>
+                <FormField
+                  control={form.control}
+                  name="course"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="course">Course</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={(e) => setCourseId(Number(e))}
+                          defaultValue={String(staff.course.id)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Course name" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {courseData.map((course) => (
+                              <SelectItem
+                                key={course.id}
+                                value={String(course.id)}
+                              >
+                                {course.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+          </div>
+          <div className="mt-4 space-x-2">
+            <Button
+              onClick={() => {
+                onDone();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button disabled={loading} onClick={requestEdit}>
+              {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
+              Continue
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

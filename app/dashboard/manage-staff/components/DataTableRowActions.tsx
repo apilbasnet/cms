@@ -14,19 +14,21 @@ import {
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
-  onEdit: (data: Student) => void;
+  onEdit: (data: Staff) => void;
   onDelete: (id: number) => void;
 }
 
-type Student = {
+type Staff = {
   id: number;
   name: string;
   email: string;
   contact: string;
   address: string;
-  course: { id: number; name: string };
-  activeSemester: { id: number; name: string };
   password: string;
+  course: {
+    id: number;
+    name: string;
+  };
 };
 
 export function DataTableRowActions<TData>({
@@ -34,7 +36,7 @@ export function DataTableRowActions<TData>({
   onEdit,
   onDelete,
 }: DataTableRowActionsProps<TData>) {
-  const data = row.original as Student;
+  const data = row.original as Staff;
 
   return (
     <DropdownMenu>

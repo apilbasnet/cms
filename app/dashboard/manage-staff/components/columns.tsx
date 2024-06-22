@@ -2,36 +2,33 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { Badge } from "@edge-ui/react";
-import { Checkbox } from "@edge-ui/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@edge-ui/react";
-
-import { labels, priorities, semesterId } from "../data/data";
-import { Task } from "../data/schema";
-import { DataTableColumnHeader } from "./DataTableColumnHeader";
+// import { semesterId } from "../data/data";
+import { DataTableColumnHeader } from "@/components/Table/components/DataTableColumnHeader";
 import { DataTableRowActions } from "./DataTableRowActions";
 
-interface Student {
+interface Staff {
   id: number;
   name: string;
   email: string;
   contact: string;
   address: string;
-  course: { id: number; name: string };
-  activeSemester: { id: number; name: string };
   password: string;
+  course: {
+    id: number;
+    name: string;
+  };
 }
 [];
 
 interface columnTableProps {
-  onEdit: (data: Student) => void;
+  onEdit: (data: Staff) => void;
   onDelete: (id: number) => void;
 }
 
 export const columns = ({
   onEdit,
   onDelete,
-}: columnTableProps): ColumnDef<Student>[] => [
+}: columnTableProps): ColumnDef<Staff>[] => [
   // {
   //   id: "select",
   //   header: ({ table }) => (
@@ -128,41 +125,7 @@ export const columns = ({
       );
     },
   },
-  {
-    accessorKey: "activeSemester",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Semester" />
-    ),
-    // cell: ({ row }) => {
-    //   return (
-    //     <div className="flex items-center">
-    //       <span>{row.original.activeSemester?.name}</span>
-    //     </div>
-    //   );
-    // },
-    cell: ({ row }) => {
-      const semester = semesterId.find(
-        (semester) => semester.label === row.original.activeSemester.name
-      );
 
-      if (!semester) {
-        return null;
-      }
-
-      return (
-        <div className="flex w-[100px] items-center">
-          <span>{semester.label}</span>
-        </div>
-      );
-    },
-
-    filterFn: (row, id, value) => {
-      const rowValueName = String(row.getValue(id)?.name);
-      const filterValue = String(value);
-
-      return filterValue === rowValueName;
-    },
-  },
   {
     accessorKey: "course",
     header: () => (

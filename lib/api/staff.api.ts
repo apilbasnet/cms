@@ -18,7 +18,20 @@ export const staffs = {
     return data;
   },
   async getTeacher() {
-    const { data } = await client.get<Staff[]>("/users/teacher");
+    const { data } = await client.get<
+      {
+        id: number;
+        name: string;
+        email: string;
+        contact: string;
+        address: string;
+        password: string;
+        course: {
+          id: number;
+          name: string;
+        };
+      }[]
+    >("/users/teacher");
 
     return data;
   },

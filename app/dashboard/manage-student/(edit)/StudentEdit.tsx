@@ -1,10 +1,4 @@
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
   Button,
   FormControl,
   FormField,
@@ -21,14 +15,12 @@ import {
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Spinner } from "@/components/icons/icons";
-import { Course, courses } from "@/lib/api/course.api";
 import { Student, students } from "@/lib/api/student.api";
 import { AxiosError } from "axios";
 import { useToast } from "@edge-ui/react";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
-import { isElement } from "react-dom/test-utils";
 
 type StudentEditProps = {
   student: {
@@ -45,7 +37,6 @@ type StudentEditProps = {
 };
 
 export const StudentEdit = ({ student, onDone }: StudentEditProps) => {
-  // console.log(student);
   const { toast } = useToast();
   const [name, setName] = useState(`${student.name}`);
   const [email, setEmail] = useState(`${student.email}`);
@@ -57,9 +48,7 @@ export const StudentEdit = ({ student, onDone }: StudentEditProps) => {
     student.activeSemester.id
   );
   const [courseId, setCourseId] = useState(student.course.id);
-  // const [courseData, setCourseData] = useState<Course[]>([]);
   const { courseData, loading: CoursesLoading } = useGetCourses();
-
   const SWASTIK_TLD = "@swastikcollege.edu.np";
 
   const formSchema = z.object({
@@ -109,6 +98,7 @@ export const StudentEdit = ({ student, onDone }: StudentEditProps) => {
           title: "Success",
           description: "Student updated successfully",
         });
+
         onDone();
       } catch (err: any) {
         const error = err as AxiosError;

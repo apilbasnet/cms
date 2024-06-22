@@ -104,12 +104,6 @@ const menuItems = [
     icon: Chat,
     role: [RoleType.ADMIN, RoleType.STUDENT, RoleType.TEACHER],
   },
-  {
-    label: "example",
-    link: "/dashboard/example",
-    icon: Chat,
-    role: [RoleType.ADMIN, RoleType.STUDENT, RoleType.TEACHER],
-  },
 ];
 
 const SidebarMenu = () => {

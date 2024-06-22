@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { AxiosError } from "axios";
 import { Course, courses } from "@/lib/api/course.api";
 import { useToast } from "@edge-ui/react";
+import { get } from "http";
 
 export const useGetCourses = () => {
   const { toast } = useToast();
@@ -31,5 +32,5 @@ export const useGetCourses = () => {
     getCourses();
   }, []);
 
-  return { loading, courseData };
+  return { loading, courseData, getCourses };
 };

@@ -1,148 +1,97 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTrigger,
-  Button,
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  toast,
-} from "@edge-ui/react";
-import AlertPopup from "@/components/AlertDialog";
+import { columns } from "./components/columns";
+import { DataTable } from "@/components/Table/components/DataTable";
 import { useGetStaffs } from "@/lib/customHooks/getStaffs";
 import { Loading } from "@/components/loading";
-import { StaffEdit } from "./(edit)/StaffEdit";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { staffs } from "@/lib/api/staff.api";
 import { AxiosError } from "axios";
+import { StaffEdit } from "./(edit)/StaffEdit";
+import { useToast } from "@edge-ui/react";
 
-const ManageStaffPage = () => {
-  const [isEditing, setIsEditing] = useState(false);
+type Staff = {
+  id: number;
+  name: string;
+  email: string;
+  contact: string;
+  address: string;
+  password: string;
+  course: {
+    id: number;
+    name: string;
+  };
+};
+
+export default function StaffListPage() {
+  const { toast } = useToast();
+  const { staffData, loading: fetching, refetch } = useGetStaffs();
   const [loading, setLoading] = useState(false);
-  const [staffData, setStaffData] = useState<
-    {
-      id: number;
-      name: string;
-      email: string;
-      contact: string;
-      address: string;
-      password: string;
-      course: { id: number; name: string };
-    }[]
-  >([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [data, setData] = useState<Staff | null>(null);
 
-  const getStaffs = async () => {
-    try {
+  const isLoading = fetching || loading;
+
+  const onDelete = useCallback(
+    async (id: number) => {
       setLoading(true);
-      const data = await staffs.getTeacher();
-      setStaffData(data as any);
-    } catch (err: any) {
-      const error = err as AxiosError;
-      toast({
-        title: "Error",
-        description:
-          (error.response?.data as any)?.message ||
-          error.message ||
-          "Failed to fetch staffs",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        await staffs.deleteTeacher(id);
+        toast({
+          title: "Success",
+          description: "Staff deleted successfully",
+        });
+        await refetch();
+      } catch (err: any) {
+        const error = err as AxiosError;
+        toast({
+          title: "Error",
+          description:
+            (error.response?.data as any)?.message ||
+            error.message ||
+            "Failed to delete Staff",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [toast, refetch]
+  );
 
-  useEffect(() => {
-    getStaffs();
+  const onEdit = useCallback(async (data: Staff) => {
+    setData(data);
+    setIsEditing(!isEditing);
   }, []);
-
-  const deleteStaff = async (id: number) => {
-    try {
-      await staffs.deleteTeacher(id);
-      getStaffs();
-    } catch (err: any) {
-      const error = err as AxiosError;
-      toast({
-        title: "Error",
-        description:
-          (error.response?.data as any)?.message ||
-          error.message ||
-          "Failed to delete staff",
-      });
-    }
-  };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   console.log(staffData);
 
+  const columnsWithActions = columns({ onEdit, onDelete });
+
+  if (isLoading) return <Loading />;
+
   return (
-    <div className="flex flex-col justify-start items-center w-4/5 p-8">
-      <div>
-        <h1 className="font-medium text-xl pb-5">Manage Staffs</h1>
+    <>
+      <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
+        <div className="flex items-center justify-between space-y-2">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Manage Staffs</h2>
+            <p className="text-muted-foreground">
+              Here&apos;s a list of staffs!
+            </p>
+          </div>
+        </div>
+        <DataTable data={staffData} columns={columnsWithActions} />
+
+        {isEditing && data && (
+          <StaffEdit
+            staff={data}
+            onDone={() => {
+              setIsEditing(false);
+              refetch();
+            }}
+          />
+        )}
       </div>
-      <Table className="border rounded-2xl">
-        <TableCaption className="mt-5">
-          A list of the staffs presented in Swastik College
-        </TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="font-extrabold">ID</TableHead>
-            <TableHead className="font-extrabold">Full Name</TableHead>
-            <TableHead className="font-extrabold">Email</TableHead>
-            <TableHead className="font-extrabold">Contact</TableHead>
-            <TableHead className="font-extrabold">Course</TableHead>
-            <TableHead className=" text-right font-extrabold pr-16">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {staffData.map((data) => (
-            <TableRow key={data.id}>
-              <TableCell className="font-medium">{data.id}</TableCell>
-              <TableCell>{data.name}</TableCell>
-              <TableCell>{data.email}</TableCell>
-              <TableCell>{data.contact}</TableCell>
-              <TableCell>{data.course.name}</TableCell>
-              <TableCell className="text-right">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="mr-2 w-20">
-                      Edit
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <StaffEdit
-                      staff={data}
-                      onDone={() => {
-                        setIsEditing(false);
-                      }}
-                    />
-                  </AlertDialogContent>
-                </AlertDialog>
-
-                <AlertPopup
-                  onCanceled={() => {}}
-                  onConfirmed={() => {
-                    deleteStaff(data.id);
-                  }}
-                >
-                  <Button variant="destructive">Delete</Button>
-                </AlertPopup>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    </>
   );
-};
-
-export default ManageStaffPage;
+}
