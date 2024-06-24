@@ -90,6 +90,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emoji-mart/data@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@emoji-mart/data@npm:1.2.1"
+  checksum: 10c0/6784b97bf49a0d3ff110d8447bbd3b0449fcbc497294be3d1c3a6cb1609308776895c7520200be604cbecaa5e172c76927e47f34419c72ba8a76fd4e5a53674b
+  languageName: node
+  linkType: hard
+
+"@emoji-mart/react@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@emoji-mart/react@npm:1.1.1"
+  peerDependencies:
+    emoji-mart: ^5.2
+    react: ^16.8 || ^17 || ^18
+  checksum: 10c0/88a9c8c24bbc5695f0ed2458734c9982c965a16db1999bc731c7cce77f9bf228f1871e899744f9a3f9fdd36a11db7ad6c0e049d710cb91c66c69a2cd4d2ee40a
+  languageName: node
+  linkType: hard
+
 "@eslint-community/eslint-utils@npm:^4.2.0":
   version: 4.4.0
   resolution: "@eslint-community/eslint-utils@npm:4.4.0"
@@ -2916,6 +2933,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"emoji-mart@npm:^5.6.0":
+  version: 5.6.0
+  resolution: "emoji-mart@npm:5.6.0"
+  checksum: 10c0/23e68ab10984f101b696d8f8e103e553ffa8e4d644e9a315190a9657903f71b833db09aac51b05de20f33bb9eef5bc1425eecdb2437042b25aff2dad0231f029
+  languageName: node
+  linkType: hard
+
+"emoji-picker-react@npm:^4.10.0":
+  version: 4.10.0
+  resolution: "emoji-picker-react@npm:4.10.0"
+  dependencies:
+    flairup: "npm:0.0.39"
+  peerDependencies:
+    react: ">=16"
+  checksum: 10c0/b4c524a199fe070373e5ec19d8e05647523545776adff211f424ab989e82d232cdc62ae7507d212af831a74a2259f34e47f0a115a77918d3527910a128575354
+  languageName: node
+  linkType: hard
+
+"emoji-picker@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "emoji-picker@npm:0.0.7"
+  checksum: 10c0/d4761e7730926287ea1d77be48f29e49231fa8c161fa53a221285a21138af33f28c7ade1ff75cdd3afbcc0ebed100bb8e5583f63271d533eb3a7e0b928f9095a
+  languageName: node
+  linkType: hard
+
 "emoji-regex@npm:^8.0.0":
   version: 8.0.0
   resolution: "emoji-regex@npm:8.0.0"
@@ -3455,6 +3497,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"flairup@npm:0.0.39":
+  version: 0.0.39
+  resolution: "flairup@npm:0.0.39"
+  checksum: 10c0/ad6392e8fc4a0dd6c7c8f529e9ce9046060c4c304455aba8a75b07ee2c4a1f3a390812480d493063c6fe4f7ba504ecbf68f00dfb9d93b87b73e690d42d734952
+  languageName: node
+  linkType: hard
+
 "flat-cache@npm:^3.0.4":
   version: 3.2.0
   resolution: "flat-cache@npm:3.2.0"
@@ -3517,6 +3566,26 @@ __metadata:
   version: 4.3.7
   resolution: "fraction.js@npm:4.3.7"
   checksum: 10c0/df291391beea9ab4c263487ffd9d17fed162dbb736982dee1379b2a8cc94e4e24e46ed508c6d278aded9080ba51872f1bc5f3a5fd8d7c74e5f105b508ac28711
+  languageName: node
+  linkType: hard
+
+"framer-motion@npm:^11.2.11":
+  version: 11.2.11
+  resolution: "framer-motion@npm:11.2.11"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    "@emotion/is-prop-valid": "*"
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/is-prop-valid":
+      optional: true
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/1ba86d3266a19beed99498a61002353498d9348a32175919ce9d1b50609be3d2af8a199596ca92db674398fbd38c1f1b131a38306972e8a588050aa0a572672d
   languageName: node
   linkType: hard
 
@@ -4375,6 +4444,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:^0.396.0":
+  version: 0.396.0
+  resolution: "lucide-react@npm:0.396.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0
+  checksum: 10c0/3c48ed3d12016e670781698af7a08067ea49b5132d6bef2b6e6e794d76f93de46d6f308af50263a8ae0c2e23bf21b0b33b97aded9aed5a68c6b81e6117cf4828
+  languageName: node
+  linkType: hard
+
 "make-fetch-happen@npm:^13.0.0":
   version: 13.0.0
   resolution: "make-fetch-happen@npm:13.0.0"
@@ -4664,6 +4742,8 @@ __metadata:
   resolution: "nextjs_project@workspace:."
   dependencies:
     "@edge-ui/react": "npm:^0.1.0"
+    "@emoji-mart/data": "npm:^1.2.1"
+    "@emoji-mart/react": "npm:^1.1.1"
     "@tanstack/react-table": "npm:^8.17.3"
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
@@ -4671,8 +4751,13 @@ __metadata:
     autoprefixer: "npm:^10.0.1"
     axios: "npm:^1.6.7"
     classnames: "npm:^2.5.1"
+    emoji-mart: "npm:^5.6.0"
+    emoji-picker: "npm:^0.0.7"
+    emoji-picker-react: "npm:^4.10.0"
     eslint: "npm:^8"
     eslint-config-next: "npm:14.1.0"
+    framer-motion: "npm:^11.2.11"
+    lucide-react: "npm:^0.396.0"
     next: "npm:14.1.0"
     postcss: "npm:^8"
     react: "npm:^18"

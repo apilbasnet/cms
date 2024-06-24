@@ -76,8 +76,21 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
     defaultValues: {},
   });
 
+  interface StaffForEdit {
+    id?: number;
+    name: string;
+    email: string;
+    contact: string;
+    address: string;
+    courseId: number;
+    subjects: any[];
+  }
+
   const editStaff = useCallback(
-    async (id: number, { name, email, contact, address, courseId }: Staff) => {
+    async (
+      id: number,
+      { name, email, contact, address, courseId }: StaffForEdit
+    ) => {
       setLoading(true);
 
       try {
@@ -87,6 +100,7 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
           contact,
           address,
           courseId,
+          subjects: [],
         });
         toast({
           title: "Success",
@@ -110,14 +124,13 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
   );
 
   const requestEdit = () => {
-    console.log(name, email, phone, address, courseId);
-
     editStaff(staff.id, {
       name,
       email,
       contact: phone,
       address,
       courseId,
+      subjects: [],
     });
   };
 

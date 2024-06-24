@@ -63,8 +63,6 @@ export default function StaffListPage() {
     setIsEditing(!isEditing);
   }, []);
 
-  console.log(staffData);
-
   const columnsWithActions = columns({ onEdit, onDelete });
 
   if (isLoading) return <Loading />;

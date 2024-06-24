@@ -1,9 +1,16 @@
-import React from 'react'
+import { ChatLayout } from "@/components/chat/chat-layout";
+import { cookies } from "next/headers";
+import React from "react";
 
 const Chat = () => {
-  return (
-    <div>Chat</div>
-  )
-}
+  const layout = cookies().get("react-resizable-panels:layout");
+  const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
 
-export default Chat
+  return (
+    <div className="z-10 border rounded-lg max-w-5xl w-full h-full text-sm lg:flex">
+      <ChatLayout defaultLayout={defaultLayout} navCollapsedSize={20} />
+    </div>
+  );
+};
+
+export default Chat;

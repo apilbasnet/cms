@@ -9,6 +9,7 @@ export interface Staff {
   address: string;
   password?: string;
   courseId: number;
+  subjects?: any[];
 }
 
 export const staffs = {
@@ -35,17 +36,8 @@ export const staffs = {
 
     return data;
   },
-  async editTeacher(
-    id: number,
-    { name, email, contact, address, courseId }: Staff
-  ) {
-    const { data } = await client.patch<Staff>(`/users/teacher/${id}`, {
-      name,
-      email,
-      contact,
-      address,
-      courseId,
-    });
+  async editTeacher(id: number, payload: Staff) {
+    const { data } = await client.patch<Staff>(`/users/teacher/${id}`, payload);
 
     return data;
   },
