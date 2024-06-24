@@ -34,8 +34,8 @@ export default function StaffListPage() {
 
   const onDelete = useCallback(
     async (id: number) => {
-      setLoading(true);
       try {
+        setLoading(true);
         await staffs.deleteTeacher(id);
         toast({
           title: "Success",

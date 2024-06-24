@@ -33,6 +33,7 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
+
         {table.getColumn("activeSemester") && (
           <DataTableFacetedFilter
             column={table.getColumn("activeSemester")}

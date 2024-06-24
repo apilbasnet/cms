@@ -25,6 +25,12 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
 } from "@edge-ui/react";
 import { Loading } from "@/components/loading";
 import { Subject, subjects } from "@/lib/api/subject.api";
@@ -35,6 +41,10 @@ import SubjectAdd from "./(comp)/SubjectAdd";
 import { useGetSubjects } from "@/lib/customHooks/getSubject";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
 import { useGetStaffs } from "@/lib/customHooks/getStaffs";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Spinner } from "@/components/icons/icons";
 
 const SubjectPage = () => {
   const { subjectData, loading: subjectLoading } = useGetSubjects();
@@ -44,41 +54,17 @@ const SubjectPage = () => {
   const { getSubjects } = useGetSubjects();
   const { courseData } = useGetCourses();
 
-  const [editSubjectName, setEditSubjectName] = useState("");
-  const [courseId, setCourseId] = useState<number>(0);
-  const [semesterId, setSemesterId] = useState<number>(0);
-  const [teacherId, setTeacherId] = useState<number>(0);
-  const [code, setCode] = useState<string>("");
   const { staffData, loading: staffLoading } = useGetStaffs();
 
-  const editSubject = useCallback(async (id: number) => {
-    try {
-      setLoading(true);
-      await subjects.editSubject(id, {
-        name: editSubjectName,
-        courseId,
-        semesterId,
-        teacherId,
-        code,
-      });
-      toast({
-        title: "Success",
-        description: "Subject updated successfully",
-      });
-      getSubjects();
-    } catch (err: any) {
-      const error = err as AxiosError;
-      toast({
-        title: "Error",
-        description:
-          (error.response?.data as any)?.message ||
-          error.message ||
-          "Failed to update subject",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const formSchema = z.object({
+    name: z.string().min(2, {
+      message: "Name must be at least 2 characters.",
+    }),
+    course: z.number(),
+    semesterId: z.number(),
+    teacherId: z.number(),
+    code: z.string(),
+  });
 
   const deleteSubject = useCallback(async (id: number) => {
     try {
@@ -88,7 +74,7 @@ const SubjectPage = () => {
         title: "Success",
         description: "Subject deleted successfully",
       });
-      getSubjects();
+      await getSubjects();
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
@@ -103,11 +89,49 @@ const SubjectPage = () => {
     }
   }, []);
 
-  if (loading) return <Loading />;
+  const [editSubjectName, setEditSubjectName] = useState("");
+  const [courseId, setCourseId] = useState(0);
+  const [semesterId, setSemesterId] = useState(0);
+  const [teacherId, setTeacherId] = useState(0);
+  const [code, setCode] = useState("");
+
+  const editSubject = async (id: number) => {
+    try {
+      setLoading(true);
+      await subjects.editSubject(id, {
+        name: editSubjectName,
+        courseId,
+        semesterId,
+        teacherId,
+        code,
+      });
+      toast({
+        title: "Success",
+        description: "Subject updated successfully",
+      });
+      await getSubjects();
+    } catch (err: any) {
+      const error = err as AxiosError;
+      toast({
+        title: "Error",
+        description:
+          (error.response?.data as any)?.message ||
+          error.message ||
+          "Failed to update subject",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+  });
 
   const filteredSubjects = subjectData.sort(
     (a, b) => a.semesterId - b.semesterId
   );
+  if (loading) return <Loading />;
 
   return (
     <>
@@ -165,86 +189,168 @@ const SubjectPage = () => {
                           <AlertDialogTitle>
                             Are you absolutely sure?
                           </AlertDialogTitle>
-                          <AlertDialogDescription className="space-y-2">
-                            <p>Name: </p>
-                            <Input
-                              type="text"
-                              placeholder={data.name}
-                              onChange={(
-                                event: React.ChangeEvent<HTMLInputElement>
-                              ) => setEditSubjectName(event.target.value)}
-                            />
-                            <p>Course: </p>
-                            <Select
-                              onValueChange={(e) => setCourseId(Number(e))}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder={"Course"} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {courseData.map((course) => (
-                                  <SelectItem
-                                    key={course.id}
-                                    value={String(course.id)}
-                                  >
-                                    {course.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                          <AlertDialogDescription>
+                            <Form {...form}>
+                              <form
+                                className="w-full mt-2 gap-2 space-y-2"
+                                onSubmit={form.handleSubmit(() =>
+                                  editSubject(data.id)
+                                )}
+                              >
+                                <Input
+                                  type="text"
+                                  placeholder={data.name}
+                                  value={editSubjectName}
+                                  required
+                                  onChange={(v) =>
+                                    setEditSubjectName(v.target.value)
+                                  }
+                                />
 
-                            <p>Semester: </p>
-                            <Select
-                              required
-                              onValueChange={(e) => setSemesterId(Number(e))}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Semester" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {Array.from({ length: 8 }).map((_, i) => (
-                                  <SelectItem key={i} value={String(i + 1)}>
-                                    {i + 1} Semester
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                                <FormField
+                                  control={form.control}
+                                  name="semester"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel htmlFor="semester">
+                                        Semester
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Select
+                                          required
+                                          onValueChange={(e) =>
+                                            setSemesterId(Number(e))
+                                          }
+                                          value={String(semesterId)}
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue
+                                              placeholder={"Semester"}
+                                            />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            {Array.from({ length: 8 }).map(
+                                              (_, i) => (
+                                                <SelectItem
+                                                  key={i}
+                                                  value={String(i + 1)}
+                                                >
+                                                  {i + 1} Semester
+                                                </SelectItem>
+                                              )
+                                            )}
+                                          </SelectContent>
+                                        </Select>
+                                      </FormControl>
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name="course"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel htmlFor="course">
+                                        Course
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Select
+                                          onValueChange={(e) =>
+                                            setCourseId(Number(e))
+                                          }
+                                          value={String(courseId)}
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Course" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            {courseData.map((course) => (
+                                              <SelectItem
+                                                key={course.id}
+                                                value={String(course.id)}
+                                              >
+                                                {course.name}
+                                              </SelectItem>
+                                            ))}
+                                          </SelectContent>
+                                        </Select>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
 
-                            <p>Teacher: </p>
-                            <Select
-                              onValueChange={(e) => setTeacherId(Number(e))}
-                              required
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Teacher name" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {staffData.map((teacher) => (
-                                  <SelectItem
-                                    key={teacher.id}
-                                    value={String(teacher.id)}
-                                  >
-                                    {teacher.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                                <FormField
+                                  control={form.control}
+                                  name="teacher"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel htmlFor="teacher">
+                                        Teacher
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Select
+                                          onValueChange={(e) =>
+                                            setTeacherId(Number(e))
+                                          }
+                                          value={String(teacherId)}
+                                          required
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Teacher name" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            {staffData.map((teacher) => (
+                                              <SelectItem
+                                                key={teacher.id}
+                                                value={String(teacher.id)}
+                                              >
+                                                {teacher.name}
+                                              </SelectItem>
+                                            ))}
+                                          </SelectContent>
+                                        </Select>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
 
-                            <p>Code: </p>
-                            <Input
-                              type="text"
-                              placeholder={"Code"}
-                              onChange={(
-                                event: React.ChangeEvent<HTMLInputElement>
-                              ) => setCode(event.target.value)}
-                            />
+                                <FormField
+                                  control={form.control}
+                                  name="code"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel htmlFor="code">Code</FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          id="code"
+                                          type="text"
+                                          required
+                                          placeholder={data.code}
+                                          {...field}
+                                          onChange={(event) =>
+                                            setCode(event.target.value)
+                                          }
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </form>
+                            </Form>
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
+                            disabled={loading}
                             onClick={() => editSubject(data.id)}
                           >
+                            {loading && (
+                              <Spinner className="mr-2 h-4 w-4 animate-spin" />
+                            )}
                             Continue
                           </AlertDialogAction>
                         </AlertDialogFooter>
@@ -268,7 +374,7 @@ const SubjectPage = () => {
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => deleteSubject(data.id)}
+                            onClick={() => deleteSubject(Number(data.id))}
                           >
                             Continue
                           </AlertDialogAction>
