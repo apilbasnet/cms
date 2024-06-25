@@ -19,7 +19,7 @@ export function Chat({ messages, selectedUser, isMobile }: ChatProps) {
   };
 
   return (
-    <div className="flex flex-col justify-between w-full h-full">
+    <div className="flex flex-col justify-between w-full  h-4/5 ">
       <ChatTopbar selectedUser={selectedUser} />
 
       <ChatList

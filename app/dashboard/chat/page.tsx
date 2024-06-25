@@ -6,11 +6,7 @@ const Chat = () => {
   const layout = cookies().get("react-resizable-panels:layout");
   const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
 
-  return (
-    <div className="z-10 border rounded-lg max-w-5xl w-full h-full text-sm lg:flex">
-      <ChatLayout defaultLayout={defaultLayout} navCollapsedSize={20} />
-    </div>
-  );
+  return <ChatLayout defaultLayout={defaultLayout} navCollapsedSize={10} />;
 };
 
 export default Chat;

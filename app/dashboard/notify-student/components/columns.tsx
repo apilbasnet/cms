@@ -149,11 +149,18 @@ export const columns = ({
       );
     },
 
+    // filterFn: (row, id, value) => {
+    //   const rowValueName = String(row.getValue(id)?.name);
+    //   const filterValue = String(value);
+
+    //   return filterValue === rowValueName;
+    // },
+
     filterFn: (row, id, value) => {
       const rowValueName = String(row.getValue(id)?.name);
       const filterValue = String(value);
 
-      return filterValue === rowValueName;
+      return filterValue.includes(rowValueName);
     },
   },
   {
@@ -170,26 +177,12 @@ export const columns = ({
         </div>
       );
     },
-    // cell: ({ row }) => {
-    //   const priority = priorities.find(
-    //     (priority) => priority.value === row.getValue("courseId")
-    //   );
 
-    //   if (!priority) {
-    //     return null;
-    //   }
-
-    //   return (
-    //     <div className="flex items-center">
-    //       {priority.icon && (
-    //         <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-    //       )}
-    //       <span>{priority.label}</span>
-    //     </div>
-    //   );
-    // },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      const rowValueName = String(row.getValue(id)?.name);
+      const filterValue = String(value);
+
+      return filterValue.includes(rowValueName);
     },
   },
   {
