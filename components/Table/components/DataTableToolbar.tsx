@@ -10,6 +10,7 @@ import { DataTableViewOptions } from "./DataTableViewOptions";
 import { priorities, semesterId } from "../data/data";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
+import { Loading } from "@/components/loading";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -21,6 +22,14 @@ export function DataTableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const { courseData, loading } = useGetCourses();
+
+  const courseOptions = courseData.map((course) => ({
+    label: course.name,
+    value: course.name,
+  }));
+
+  console.log(courseOptions);
+  if (loading) return <Loading />;
 
   return (
     <div className="flex items-center justify-between">
@@ -41,13 +50,13 @@ export function DataTableToolbar<TData>({
             options={semesterId}
           />
         )}
-        {/* {table.getColumn("courseId") && (
+        {table.getColumn("course") && (
           <DataTableFacetedFilter
-            column={table.getColumn("courseId")}
+            column={table.getColumn("course")}
             title="Courses"
-            options={courseData}
+            options={courseOptions}
           />
-        )} */}
+        )}
         {isFiltered && (
           <Button
             variant="ghost"
