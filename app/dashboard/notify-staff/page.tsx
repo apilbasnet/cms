@@ -4,6 +4,7 @@ import { DataTable } from "@/components/Table/components/DataTable";
 import { useGetStaffs } from "@/lib/customHooks/getStaffs";
 import { Loading } from "@/components/loading";
 import { useCallback, useState } from "react";
+import { Button } from "@edge-ui/react";
 
 type Staff = {
   id: number;
@@ -28,6 +29,16 @@ export default function NotifyStaffPage() {
     alert(data.email + " has been notified");
   }, []);
 
+  const handleNotifyAll = useCallback(async () => {
+    setLoading(true);
+    await Promise.all(
+      staffData.map(async (staff) => {
+        await onNotify(staff);
+      })
+    );
+    setLoading(false);
+  }, []);
+
   const columnsWithActions = columns({ onNotify });
 
   if (isLoading) return <Loading />;
@@ -44,6 +55,9 @@ export default function NotifyStaffPage() {
               Here&apos;s a list of staffs!
             </p>
           </div>
+          <Button variant="default" onClick={handleNotifyAll}>
+            Send Notification to All
+          </Button>
         </div>
         <DataTable data={staffData} columns={columnsWithActions} />
       </div>

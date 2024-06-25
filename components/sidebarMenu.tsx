@@ -86,18 +86,7 @@ const menuItems = [
     icon: Notify,
     role: [RoleType.ADMIN, RoleType.TEACHER],
   },
-  {
-    label: "View Attendance",
-    link: "/dashboard/view-attendance",
-    icon: Attendance,
-    role: [RoleType.ADMIN, RoleType.STUDENT, RoleType.TEACHER],
-  },
-  {
-    label: "View Exam Results",
-    link: "/dashboard/exam-results",
-    icon: ExamResult,
-    role: [RoleType.ADMIN, RoleType.STUDENT, RoleType.TEACHER],
-  },
+
   {
     label: "Chat",
     link: "/dashboard/chat",

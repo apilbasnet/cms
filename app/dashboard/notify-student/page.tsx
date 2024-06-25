@@ -5,6 +5,7 @@ import { DataTable } from "@/components/Table/components/DataTable";
 import { useGetStudents } from "@/lib/customHooks/getStudents";
 import { Loading } from "@/components/loading";
 import { useCallback, useState } from "react";
+import { Button } from "@edge-ui/react";
 
 type Student = {
   id: number;
@@ -27,6 +28,16 @@ export default function NotifyStudentPage() {
     alert(data.email + " has been notified");
   }, []);
 
+  const handleNotifyAll = useCallback(async () => {
+    setLoading(true);
+    await Promise.all(
+      studentData.map(async (student) => {
+        await onNotify(student);
+      })
+    );
+    setLoading(false);
+  }, []);
+
   const columnsWithActions = columns({ onNotify });
 
   if (isLoading) return <Loading />;
@@ -43,6 +54,9 @@ export default function NotifyStudentPage() {
               Here&apos;s a list of students!
             </p>
           </div>
+          <Button variant="default" onClick={handleNotifyAll}>
+            Send Notification to All
+          </Button>
         </div>
         <DataTable data={studentData} columns={columnsWithActions} />
       </div>
