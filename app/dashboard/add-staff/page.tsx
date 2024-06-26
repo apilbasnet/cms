@@ -26,6 +26,7 @@ import { Staff, staffs } from "@/lib/api/staff.api";
 import { Spinner } from "@/components/icons/icons";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
 import { Course } from "@/lib/api/course.api";
+import { useRouter } from "next/navigation";
 
 const SWASTIK_TLD = "@swastikcollege.edu.np";
 
@@ -43,6 +44,7 @@ const formSchema = z.object({
 });
 
 const AddStaffPage = () => {
+  const router = useRouter();
   const { toast } = useToast();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,6 +61,15 @@ const AddStaffPage = () => {
     resolver: zodResolver(formSchema),
   });
 
+  // const resetFormData = () => {
+  //   setName("");
+  //   setEmail("");
+  //   setPhone("");
+  //   setAddress("");
+  //   setPassword("");
+  //   setCourseId;
+  // };
+
   const addTeachers = useCallback(async () => {
     setLoading(true);
     try {
@@ -72,6 +83,12 @@ const AddStaffPage = () => {
       });
       setTeacherData([data]);
       console.log(teacherData);
+      form.reset();
+      router.push("/dashboard/manage-staff");
+      toast({
+        title: "Success",
+        description: "Teacher added successfully",
+      });
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
@@ -84,7 +101,18 @@ const AddStaffPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [toast, name, email, phone, address, password, courseId, teacherData]);
+  }, [
+    toast,
+    name,
+    email,
+    phone,
+    address,
+    password,
+    courseId,
+    teacherData,
+    form,
+    router,
+  ]);
 
   const onSubmit = () => {
     addTeachers();

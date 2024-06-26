@@ -24,6 +24,7 @@ import { AxiosError } from "axios";
 import { Student, students } from "@/lib/api/student.api";
 import { get } from "http";
 import { Spinner } from "@/components/icons/icons";
+import { useRouter } from "next/navigation";
 
 const SWASTIK_TLD = "@swastikcollege.edu.np";
 
@@ -42,6 +43,7 @@ const formSchema = z.object({
 });
 
 const AddStudentPage = () => {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -88,6 +90,7 @@ const AddStudentPage = () => {
         title: "Success",
         description: "Student created successfully",
       });
+      router.push("/dashboard/manage-student");
     } catch (err: any) {
       const error = err as AxiosError;
       toast({

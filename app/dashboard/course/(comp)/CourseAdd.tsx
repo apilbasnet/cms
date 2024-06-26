@@ -23,6 +23,7 @@ export default function CourseAdd({ refresh }: { refresh: () => void }) {
           variant: "default",
         });
         refresh();
+        setName("");
       } catch (err) {
         const error = err as AxiosError;
         console.log(error);
