@@ -3,7 +3,13 @@
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
-import { Button } from "@edge-ui/react";
+import {
+  Button,
+  Calendar,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@edge-ui/react";
 import { Input } from "@edge-ui/react";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 
@@ -11,6 +17,7 @@ import { priorities, semesterId } from "../data/data";
 import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
 import { useGetCourses } from "@/lib/customHooks/getCourses";
 import { Loading } from "@/components/loading";
+import { CalendarDaysIcon } from "@/components/icons/icons";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -57,6 +64,22 @@ export function DataTableToolbar<TData>({
             options={courseOptions}
           />
         )}
+        {
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <CalendarDaysIcon className="w-5 h-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <Calendar mode="single" initialFocus />
+            </PopoverContent>
+          </Popover>
+        }
         {isFiltered && (
           <Button
             variant="ghost"
