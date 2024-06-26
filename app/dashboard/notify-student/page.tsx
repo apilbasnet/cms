@@ -6,6 +6,7 @@ import { useGetStudents } from "@/lib/customHooks/getStudents";
 import { Loading } from "@/components/loading";
 import { useCallback, useState } from "react";
 import { Button } from "@edge-ui/react";
+import { NotificationDialog } from "@/components/NotificationDialogToStudent";
 
 type Student = {
   id: number;
@@ -21,21 +22,18 @@ type Student = {
 export default function NotifyStudentPage() {
   const { studentData, loading: fetching, refetch } = useGetStudents();
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const [d, setD] = useState<Student>();
 
   const isLoading = fetching || loading;
 
   const onNotify = useCallback(async (data: Student) => {
-    alert(data.email + " has been notified");
+    setNotification(true);
+    setD(data);
   }, []);
 
   const handleNotifyAll = useCallback(async () => {
-    setLoading(true);
-    await Promise.all(
-      studentData.map(async (student) => {
-        await onNotify(student);
-      })
-    );
-    setLoading(false);
+    setNotification(true);
   }, []);
 
   const columnsWithActions = columns({ onNotify });
@@ -59,6 +57,13 @@ export default function NotifyStudentPage() {
           </Button>
         </div>
         <DataTable data={studentData} columns={columnsWithActions} />
+
+        {notification && (
+          <NotificationDialog
+            student={d}
+            onDone={() => setNotification(false)}
+          />
+        )}
       </div>
     </>
   );

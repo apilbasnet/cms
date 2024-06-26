@@ -5,6 +5,7 @@ import { useGetStaffs } from "@/lib/customHooks/getStaffs";
 import { Loading } from "@/components/loading";
 import { useCallback, useState } from "react";
 import { Button } from "@edge-ui/react";
+import { NotificationDialogToStaff } from "@/components/NotificationDialogToStaff";
 
 type Staff = {
   id: number;
@@ -22,21 +23,18 @@ type Staff = {
 export default function NotifyStaffPage() {
   const { staffData, loading: fetching, refetch } = useGetStaffs();
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const [d, setD] = useState<Staff>();
 
   const isLoading = fetching || loading;
 
   const onNotify = useCallback(async (data: Staff) => {
-    alert(data.email + " has been notified");
+    setNotification(true);
+    setD(data);
   }, []);
 
   const handleNotifyAll = useCallback(async () => {
-    setLoading(true);
-    await Promise.all(
-      staffData.map(async (staff) => {
-        await onNotify(staff);
-      })
-    );
-    setLoading(false);
+    setNotification(true);
   }, []);
 
   const columnsWithActions = columns({ onNotify });
@@ -60,6 +58,13 @@ export default function NotifyStaffPage() {
           </Button>
         </div>
         <DataTable data={staffData} columns={columnsWithActions} />
+
+        {notification && (
+          <NotificationDialogToStaff
+            staff={d}
+            onDone={() => setNotification(false)}
+          />
+        )}
       </div>
     </>
   );
