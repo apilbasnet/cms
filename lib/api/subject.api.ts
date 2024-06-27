@@ -1,4 +1,4 @@
-import { client } from "./client";
+import { client } from './client';
 
 export interface Subject {
   name: string;
@@ -10,8 +10,10 @@ export interface Subject {
 }
 
 export const subjects = {
-  async getSubjects() {
-    const { data } = await client.get<Subject[]>("/courses/subjects");
+  async getSubjects(my = false) {
+    const { data } = await client.get<Subject[]>('/courses/subjects', {
+      params: { my },
+    });
     return data;
   },
   async createSubject({
@@ -27,7 +29,7 @@ export const subjects = {
     teacherId: number;
     code: string;
   }) {
-    const { data } = await client.post<Subject>("/courses/subjects", {
+    const { data } = await client.post<Subject>('/courses/subjects', {
       name,
       semesterId,
       courseId,

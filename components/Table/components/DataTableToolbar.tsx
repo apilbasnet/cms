@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Cross2Icon } from "@radix-ui/react-icons";
-import { Table } from "@tanstack/react-table";
+import { Cross2Icon } from '@radix-ui/react-icons';
+import { Table } from '@tanstack/react-table';
 
 import {
   Button,
@@ -9,15 +9,15 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@edge-ui/react";
-import { Input } from "@edge-ui/react";
-import { DataTableViewOptions } from "./DataTableViewOptions";
+} from '@edge-ui/react';
+import { Input } from '@edge-ui/react';
+import { DataTableViewOptions } from './DataTableViewOptions';
 
-import { priorities, semesterId } from "../data/data";
-import { DataTableFacetedFilter } from "./DataTableFacetedFilter";
-import { useGetCourses } from "@/lib/customHooks/getCourses";
-import { Loading } from "@/components/loading";
-import { CalendarDaysIcon } from "@/components/icons/icons";
+import { priorities, semesterId } from '../data/data';
+import { DataTableFacetedFilter } from './DataTableFacetedFilter';
+import { useGetCourses } from '@/lib/customHooks/getCourses';
+import { Loading } from '@/components/loading';
+import { CalendarDaysIcon } from '@/components/icons/icons';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -35,7 +35,6 @@ export function DataTableToolbar<TData>({
     value: course.name,
   }));
 
-  console.log(courseOptions);
   if (loading) return <Loading />;
 
   return (
@@ -43,28 +42,35 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Search..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn('name')?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
 
-        {table.getColumn("activeSemester") && (
+        {table.getColumn('activeSemester') && (
           <DataTableFacetedFilter
-            column={table.getColumn("activeSemester")}
+            column={table.getColumn('activeSemester')}
             title="Semester"
             options={semesterId}
           />
         )}
-        {table.getColumn("course") && (
+        {table.getColumn('course') && (
           <DataTableFacetedFilter
-            column={table.getColumn("course")}
+            column={table.getColumn('course')}
             title="Courses"
             options={courseOptions}
           />
         )}
-        {
+        {table.getColumn('subject') && (
+          <DataTableFacetedFilter
+            column={table.getColumn('subject')}
+            title="Subject"
+            options={courseOptions}
+          />
+        )}
+        {/* {
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -79,7 +85,7 @@ export function DataTableToolbar<TData>({
               <Calendar mode="single" initialFocus />
             </PopoverContent>
           </Popover>
-        }
+        } */}
         {isFiltered && (
           <Button
             variant="ghost"

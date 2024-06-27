@@ -22,12 +22,25 @@ interface LoginResponse<T> {
   user: T;
   token: string;
 }
+
+interface Stat {
+  id: number;
+  name: string;
+  count: number;
+}
+
 export interface IStats {
   courses: number;
   subjects: number;
   teachers: number;
   students: number;
   admins: number;
+  totalClasses: number;
+  presentClasses: number;
+  absentClasses: number;
+  totalSubjects: number;
+  studentsPerCourse: Stat[];
+  attendance: Stat[];
 }
 export const users = {
   async getStatistics() {

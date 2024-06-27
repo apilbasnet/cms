@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import { AxiosError } from "axios";
-import { Student, students } from "@/lib/api/student.api";
-import { useToast } from "@edge-ui/react";
+import { useState, useEffect, useCallback } from 'react';
+import { AxiosError } from 'axios';
+import { Student, students } from '@/lib/api/student.api';
+import { useToast } from '@edge-ui/react';
 
-export const useGetStudents = () => {
+export const useGetStudents = (my = false) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [studentData, setStudentData] = useState<
@@ -19,28 +19,28 @@ export const useGetStudents = () => {
     }[]
   >([]);
 
-  const getCourses = useCallback(async () => {
+  const getStudent = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await students.getStudent();
+      const data = await students.getStudent(my);
       setStudentData(data);
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to fetch courses",
+          'Failed to fetch courses',
       });
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [toast, my]);
 
   useEffect(() => {
-    getCourses();
-  }, []);
+    getStudent();
+  }, [my]);
 
-  return { loading, studentData, refetch: getCourses };
+  return { loading, studentData, refetch: getStudent };
 };

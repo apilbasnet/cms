@@ -1,32 +1,11 @@
-"use client";
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from '@tanstack/react-table';
 
-import { labels, priorities, semesterId } from "@/components/Table/data/data";
-import { Task } from "@/components/Table/data/schema";
-import { DataTableColumnHeader } from "@/components/Table/components/DataTableColumnHeader";
-import { DataTableRowActions } from "@/components/Table/components/DataTableRowActions";
-import { Actions } from "./Actions";
-import {
-  Button,
-  Calendar,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@edge-ui/react";
-import { CalendarDaysIcon } from "@/components/icons/icons";
-
-interface Student {
-  id: number;
-  name: string;
-  email: string;
-  contact: string;
-  address: string;
-  course: { id: number; name: string };
-  activeSemester: { id: number; name: string };
-  password: string;
-}
-[];
+import { semesterId } from '@/components/Table/data/data';
+import { DataTableColumnHeader } from '@/components/Table/components/DataTableColumnHeader';
+import { Actions } from './Actions';
+import type { Student } from '../page';
 
 interface columnTableProps {
   onPresent: (data: Student) => void;
@@ -39,41 +18,17 @@ export const columns = ({
   onAbsent,
   present,
 }: columnTableProps): ColumnDef<Student>[] => [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //       className="translate-y-[2px]"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //       className="translate-y-[2px]"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
-    accessorKey: "id",
+    accessorKey: 'id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="ID" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
@@ -81,7 +36,7 @@ export const columns = ({
       return (
         <div className="flex space-x-2">
           <span className="max-w-[300px] truncate font-medium">
-            {row.getValue("name")}
+            {row.getValue('name')}
           </span>
         </div>
       );
@@ -89,7 +44,7 @@ export const columns = ({
     enableHiding: false,
   },
   {
-    accessorKey: "email",
+    accessorKey: 'email',
     header: () => (
       <div className="text-xs hover:text-black hover:cursor-default ">
         Email
@@ -105,14 +60,14 @@ export const columns = ({
     enableSorting: false,
   },
   {
-    accessorKey: "contact",
+    accessorKey: 'contact',
     header: () => (
       <div className="text-xs hover:text-black hover:cursor-default ">
         Contact
       </div>
     ),
     cell: ({ row }) => {
-      const contact: number = row.getValue("contact");
+      const contact: number = row.getValue('contact');
       return (
         <div className="flex space-x-2 text-muted-foreground text-xs font-semibold">
           {contact}
@@ -122,20 +77,20 @@ export const columns = ({
   },
 
   {
-    id: "Attendance",
+    id: 'Attendance',
     header: () => (
       <div className="text-xs hover:text-black hover:cursor-default ">Date</div>
     ),
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <span>{row.original.DateTime}</span>
+          <span>{new Date().toDateString()}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: "activeSemester",
+    accessorKey: 'activeSemester',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Semester" />
     ),
@@ -157,14 +112,14 @@ export const columns = ({
     },
 
     filterFn: (row, id, value) => {
-      const rowValueName = String(row.getValue(id)?.name);
+      const rowValueName = String((row.getValue(id) as any)?.name);
       const filterValue = String(value);
 
       return filterValue.includes(rowValueName);
     },
   },
   {
-    accessorKey: "course",
+    accessorKey: 'course',
     header: () => (
       <div className="text-xs hover:text-black hover:cursor-default ">
         Course
@@ -179,14 +134,14 @@ export const columns = ({
     },
 
     filterFn: (row, id, value) => {
-      const rowValueName = String(row.getValue(id)?.name);
+      const rowValueName = String((row.getValue(id) as any)?.name);
       const filterValue = String(value);
 
       return filterValue.includes(rowValueName);
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     header: () => (
       <div className="text-xs hover:text-black hover:cursor-default ">
         Actions
@@ -196,9 +151,9 @@ export const columns = ({
       return (
         <Actions
           row={row}
-          onAbsent={onAbsent}
-          onPresent={onPresent}
-          isPresent={present}
+          onAbsent={onAbsent as any}
+          onPresent={onPresent as any}
+          isPresent={present as any}
         />
       );
     },
