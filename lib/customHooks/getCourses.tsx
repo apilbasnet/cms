@@ -1,8 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import { AxiosError } from "axios";
-import { Course, courses } from "@/lib/api/course.api";
-import { useToast } from "@edge-ui/react";
-import { get } from "http";
+import { useState, useEffect, useCallback } from 'react';
+import { AxiosError } from 'axios';
+import { Course, courses } from '@/lib/api/course.api';
+import { useToast } from '@edge-ui/react';
 
 export const useGetCourses = () => {
   const { toast } = useToast();
@@ -17,11 +16,11 @@ export const useGetCourses = () => {
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to fetch courses",
+          'Failed to fetch courses',
       });
     } finally {
       setLoading(false);
