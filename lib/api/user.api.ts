@@ -1,9 +1,9 @@
-import { client } from './client';
+import { client } from "./client";
 
 export const RoleType = {
-  ADMIN: 'ADMIN',
-  TEACHER: 'TEACHER',
-  STUDENT: 'STUDENT',
+  ADMIN: "ADMIN",
+  TEACHER: "TEACHER",
+  STUDENT: "STUDENT",
 };
 
 export type RoleType = (typeof RoleType)[keyof typeof RoleType];
@@ -44,27 +44,27 @@ export interface IStats {
 }
 export const users = {
   async getStatistics() {
-    const { data } = await client.get<IStats>('/statistics');
+    const { data } = await client.get<IStats>("/statistics");
 
     return data;
   },
   async login(email: string, password: string) {
-    const { data } = await client.post<LoginResponse<User>>('/users/login', {
+    const { data } = await client.post<LoginResponse<User>>("/users/login", {
       email,
       password,
     });
 
     const token = data.token;
-    if (token) localStorage.setItem('token', token);
+    if (token) localStorage.setItem("token", token);
     return data.user;
   },
   async me() {
-    const { data } = await client.get<User>('/users/me');
+    const { data } = await client.get<User>("/users/me");
 
     return data;
   },
   async notifyAll(title: string, message: string, role: RoleType) {
-    const { data } = await client.post('/users/notify', {
+    const { data } = await client.post("/users/notify", {
       title,
       message,
       sentToId: -1,
@@ -74,13 +74,32 @@ export const users = {
     return data;
   },
   async notify(id: number, title: string, message: string, role: RoleType) {
-    const { data } = await client.post('/users/notify', {
+    const { data } = await client.post("/users/notify", {
       title,
       message,
       sentToId: id,
       role,
     });
 
+    return data;
+  },
+
+  async getNotifications() {
+    const { data } = await client.get<
+      {
+        sentBy: {
+          name: string;
+          id: number;
+        };
+        id: number;
+        title: string;
+        message: string;
+        sentById: number;
+        createdAt: string;
+        updatedAt: string;
+        sentToId: number;
+      }[]
+    >("/users/notifications");
     return data;
   },
 };

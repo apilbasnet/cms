@@ -72,6 +72,12 @@ const menuItems = [
   },
 
   {
+    label: "My Notifications",
+    link: "/dashboard/notifications",
+    icon: Notify,
+    role: [RoleType.STUDENT, RoleType.TEACHER],
+  },
+  {
     label: "Notify Staff",
     link: "/dashboard/notify-staff",
     icon: Notify,
