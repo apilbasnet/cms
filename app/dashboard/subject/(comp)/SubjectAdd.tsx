@@ -1,76 +1,51 @@
-"use client";
-import { Spinner } from "@/components/icons/icons";
+'use client';
+import { Spinner } from '@/components/icons/icons';
 import {
   Button,
   Input,
   useToast,
-  Label,
   FormField,
   FormItem,
   FormLabel,
   FormControl,
   Select,
-  Checkbox,
   Form,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
   FormMessage,
-} from "@edge-ui/react";
-import { AxiosError } from "axios";
-import React, { useEffect, useCallback, useState } from "react";
-import { useGetCourses } from "@/lib/customHooks/getCourses";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { subjects } from "@/lib/api/subject.api";
-import { useGetStaffs } from "@/lib/customHooks/getStaffs";
-import { useGetSubjects } from "@/lib/customHooks/getSubject";
+} from '@edge-ui/react';
+import { AxiosError } from 'axios';
+import { useCallback, useState } from 'react';
+import { useGetCourses } from '@/lib/customHooks/getCourses';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { subjects } from '@/lib/api/subject.api';
+import { useGetStaffs } from '@/lib/customHooks/getStaffs';
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   course: z.number(),
 });
 
 export default function SubjectAdd({ refresh }: { refresh: () => void }) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [courseId, setCourseId] = useState<number | undefined>();
   const [semesterId, setSemesterId] = useState<number | undefined>();
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
   const { courseData, loading: coursesLoading } = useGetCourses();
   const [teacherId, setTeacherId] = useState<number | undefined>();
-  const [code, setCode] = useState<string>("");
+  const [code, setCode] = useState<string>('');
   const { staffData, loading: staffLoading } = useGetStaffs();
-
-  // const { getSubjects } = useGetSubjects();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
-
-  const getSubjects = useCallback(async () => {
-    try {
-      const data = await subjects.getSubjects();
-      console.log(data);
-    } catch (err: any) {
-      const error = err as AxiosError;
-      toast({
-        title: "Error",
-        description:
-          (error.response?.data as any)?.message ||
-          error.message ||
-          "Failed to fetch subjects",
-      });
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    getSubjects();
-  }, []);
 
   const addSubject = useCallback(async () => {
     try {
@@ -84,25 +59,25 @@ export default function SubjectAdd({ refresh }: { refresh: () => void }) {
       });
       console.log(subject);
       toast({
-        title: "Success",
+        title: 'Success',
         description: `Successfully created a new subject ${subject.name}`,
-        variant: "default",
+        variant: 'default',
       });
-      getSubjects();
+      await refresh();
     } catch (err) {
       const error = err as AxiosError;
       console.log(error);
 
       toast({
-        title: "Error",
+        title: 'Error',
         description:
-          error.response?.data?.message || "Failed to create that subject",
-        variant: "destructive",
+          error.response?.data?.message || 'Failed to create that subject',
+        variant: 'destructive',
       });
     } finally {
       setSubmitting(false);
     }
-  }, [name, toast, courseId, semesterId, teacherId, code, getSubjects]);
+  }, [name, toast, courseId, semesterId, teacherId, code, refresh]);
 
   return (
     <div className=" mb-4  w-3/4  ">

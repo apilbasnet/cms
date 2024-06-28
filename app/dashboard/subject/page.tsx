@@ -1,5 +1,5 @@
-"use client";
-import { useCallback, useEffect, useState } from "react";
+'use client';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Table,
@@ -31,34 +31,37 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-} from "@edge-ui/react";
-import { Loading } from "@/components/loading";
-import { Subject, subjects } from "@/lib/api/subject.api";
-import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { useUser } from "@/lib/context/UserContext";
-import SubjectAdd from "./(comp)/SubjectAdd";
-import { useGetSubjects } from "@/lib/customHooks/getSubject";
-import { useGetCourses } from "@/lib/customHooks/getCourses";
-import { useGetStaffs } from "@/lib/customHooks/getStaffs";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Spinner } from "@/components/icons/icons";
+} from '@edge-ui/react';
+import { Loading } from '@/components/loading';
+import { Subject, subjects } from '@/lib/api/subject.api';
+import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+import { useUser } from '@/lib/context/UserContext';
+import SubjectAdd from './(comp)/SubjectAdd';
+import { useGetSubjects } from '@/lib/customHooks/getSubject';
+import { useGetCourses } from '@/lib/customHooks/getCourses';
+import { useGetStaffs } from '@/lib/customHooks/getStaffs';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Spinner } from '@/components/icons/icons';
 
 const SubjectPage = () => {
-  const { subjectData, loading: subjectLoading } = useGetSubjects();
+  const {
+    subjectData,
+    loading: subjectLoading,
+    getSubjects,
+  } = useGetSubjects();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
-  const { getSubjects } = useGetSubjects();
   const { courseData } = useGetCourses();
 
   const { staffData, loading: staffLoading } = useGetStaffs();
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
+      message: 'Name must be at least 2 characters.',
     }),
     course: z.number(),
     semesterId: z.number(),
@@ -71,29 +74,29 @@ const SubjectPage = () => {
       setLoading(true);
       await subjects.deleteSubject(id);
       toast({
-        title: "Success",
-        description: "Subject deleted successfully",
+        title: 'Success',
+        description: 'Subject deleted successfully',
       });
       await getSubjects();
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to delete subject",
+          'Failed to delete subject',
       });
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const [editSubjectName, setEditSubjectName] = useState("");
+  const [editSubjectName, setEditSubjectName] = useState('');
   const [courseId, setCourseId] = useState(0);
   const [semesterId, setSemesterId] = useState(0);
   const [teacherId, setTeacherId] = useState(0);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
 
   const editSubject = async (id: number) => {
     try {
@@ -106,18 +109,18 @@ const SubjectPage = () => {
         code,
       });
       toast({
-        title: "Success",
-        description: "Subject updated successfully",
+        title: 'Success',
+        description: 'Subject updated successfully',
       });
       await getSubjects();
     } catch (err: any) {
       const error = err as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
           (error.response?.data as any)?.message ||
           error.message ||
-          "Failed to update subject",
+          'Failed to update subject',
       });
     } finally {
       setLoading(false);
@@ -138,10 +141,10 @@ const SubjectPage = () => {
       <div className="flex flex-col justify-start items-center w-5/6 py-8 px-8">
         <div>
           <h1 className="font-medium text-xl ">
-            {user?.role === "ADMIN" ? "Manage Subjects" : "Subjects"}
+            {user?.role === 'ADMIN' ? 'Manage Subjects' : 'Subjects'}
           </h1>
         </div>
-        {user?.role === "ADMIN" ? <SubjectAdd refresh={getSubjects} /> : null}
+        {user?.role === 'ADMIN' ? <SubjectAdd refresh={getSubjects} /> : null}
         <Table className="border rounded-2xl">
           <TableCaption className="mt-5">
             A list of the subjects presented in Swastik College
@@ -153,7 +156,7 @@ const SubjectPage = () => {
               <TableHead className="font-extrabold">Course</TableHead>
               <TableHead className="font-extrabold">Semester</TableHead>
               {/* <TableHead className="font-extrabold">Teacher</TableHead> */}
-              {user?.role === "ADMIN" ? (
+              {user?.role === 'ADMIN' ? (
                 <TableHead className="font-extrabold text-right pr-16">
                   Actions
                 </TableHead>
@@ -174,9 +177,9 @@ const SubjectPage = () => {
                 </TableCell>
                 <TableCell>
                   {data.semesterId}
-                  {" Semester"}
+                  {' Semester'}
                 </TableCell>
-                {user?.role === "ADMIN" ? (
+                {user?.role === 'ADMIN' ? (
                   <TableCell className="text-right ">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
@@ -225,7 +228,7 @@ const SubjectPage = () => {
                                         >
                                           <SelectTrigger>
                                             <SelectValue
-                                              placeholder={"Semester"}
+                                              placeholder={'Semester'}
                                             />
                                           </SelectTrigger>
                                           <SelectContent>

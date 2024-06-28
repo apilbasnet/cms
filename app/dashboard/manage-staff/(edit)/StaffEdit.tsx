@@ -17,17 +17,17 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@edge-ui/react";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useCallback, useEffect, useState } from "react";
-import { Spinner } from "@/components/icons/icons";
+} from '@edge-ui/react';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Spinner } from '@/components/icons/icons';
 
-import { Staff, staffs } from "@/lib/api/staff.api";
-import { AxiosError } from "axios";
-import { useToast } from "@edge-ui/react";
-import { useGetCourses } from "@/lib/customHooks/getCourses";
+import { Staff, staffs } from '@/lib/api/staff.api';
+import { AxiosError } from 'axios';
+import { useToast } from '@edge-ui/react';
+import { useGetCourses } from '@/lib/customHooks/getCourses';
 
 type StaffEditProps = {
   staff: {
@@ -53,14 +53,15 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
   const [address, setAddress] = useState(`${staff.address}`);
   const [loading, setLoading] = useState(false);
   const [courseId, setCourseId] = useState(staff.course.id);
+  const [password, setPassword] = useState(`${staff.password}`);
 
   const { courseData, loading: CoursesLoading } = useGetCourses();
 
-  const SWASTIK_TLD = "@swastikcollege.edu.np";
+  const SWASTIK_TLD = '@swastikcollege.edu.np';
 
   const formSchema = z.object({
     name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
+      message: 'Name must be at least 2 characters.',
     }),
     email: z.string().email().endsWith(SWASTIK_TLD, {
       message: "Email must use Swastik College's domain name.",
@@ -69,6 +70,7 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
     address: z.string(),
     semester: z.number(),
     course: z.number(),
+    password: z.string().min(8).max(32),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,12 +86,13 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
     address: string;
     courseId: number;
     subjects: any[];
+    password: string;
   }
 
   const editStaff = useCallback(
     async (
       id: number,
-      { name, email, contact, address, courseId }: StaffForEdit
+      { name, email, contact, address, courseId, password }: StaffForEdit
     ) => {
       setLoading(true);
 
@@ -101,20 +104,21 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
           address,
           courseId,
           subjects: [],
+          password,
         });
         toast({
-          title: "Success",
-          description: "Staff updated successfully",
+          title: 'Success',
+          description: 'Staff updated successfully',
         });
         onDone();
       } catch (err: any) {
         const error = err as AxiosError;
         toast({
-          title: "Error",
+          title: 'Error',
           description:
             (error.response?.data as any)?.message ||
             error.message ||
-            "Failed to update student",
+            'Failed to update student',
         });
       } finally {
         setLoading(false);
@@ -131,6 +135,7 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
       address,
       courseId,
       subjects: [],
+      password,
     });
   };
 
@@ -214,7 +219,24 @@ export const StaffEdit = ({ staff, onDone }: StaffEditProps) => {
                     </FormItem>
                   )}
                 />
-
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="password"
+                          type="password"
+                          {...field}
+                          onChange={(event) => setPassword(event.target.value)}
+                          defaultValue={staff.password}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="course"
