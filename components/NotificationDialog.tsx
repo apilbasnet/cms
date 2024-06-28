@@ -6,24 +6,17 @@ import {
   FormLabel,
   Form,
   Input,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@edge-ui/react";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
-import { Spinner } from "@/components/icons/icons";
-import { Student, students } from "@/lib/api/student.api";
-import { AxiosError } from "axios";
-import { useToast } from "@edge-ui/react";
-import { useGetCourses } from "@/lib/customHooks/getCourses";
+} from '@edge-ui/react';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useState } from 'react';
+import { AxiosError } from 'axios';
+import { useToast } from '@edge-ui/react';
+import { RoleType, users } from '@/lib/api/user.api';
 
 type StudentEditProps = {
-  student:
+  user:
     | {
         id: number;
         name: string;
@@ -35,16 +28,25 @@ type StudentEditProps = {
         password: string;
       }
     | undefined;
+  role: RoleType;
   onDone: () => void;
 };
 
-export const NotificationDialog = ({ student, onDone }: StudentEditProps) => {
+export const NotificationDialog = ({
+  user,
+  onDone,
+  role,
+}: StudentEditProps) => {
   const { toast } = useToast();
-  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationTitle, setNotificationTitle] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
 
   const formSchema = z.object({
-    name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
+    title: z.string().min(2, {
+      message: 'Title must be at least 2 characters.',
+    }),
+    message: z.string().min(2, {
+      message: 'Message must be at least 2 characters.',
     }),
   });
 
@@ -55,17 +57,26 @@ export const NotificationDialog = ({ student, onDone }: StudentEditProps) => {
 
   const sendNotification = useCallback(async () => {
     try {
-      alert(notificationMessage + "send to " + student?.name);
+      if (!user) {
+        await users.notifyAll(notificationTitle, notificationMessage, role);
+      } else {
+        await users.notify(
+          user.id,
+          notificationTitle,
+          notificationMessage,
+          role
+        );
+      }
       onDone();
     } catch (error) {
       const err = error as AxiosError;
       toast({
-        title: "Error",
+        title: 'Error',
         description:
-          (err.response?.data as any)?.message || "Error sending notification",
+          (err.response?.data as any)?.message || 'Error sending notification',
       });
     }
-  }, [student?.name, notificationMessage, onDone, toast]);
+  }, [user, notificationTitle, role, notificationMessage, onDone, toast]);
 
   return (
     <div className="fixed inset-[-100px] bg-black bg-opacity-50 flex justify-center items-center ">
@@ -77,14 +88,35 @@ export const NotificationDialog = ({ student, onDone }: StudentEditProps) => {
               <form className="space-y-2">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="name">Notify</FormLabel>
+                      <FormLabel htmlFor="title">Title</FormLabel>
                       <FormControl>
                         <Input
-                          id="name"
+                          id="title"
                           type="text"
+                          {...field}
+                          onChange={(event) =>
+                            setNotificationTitle(event.target.value)
+                          }
+                          placeholder="Title..."
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="message">Message</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="message"
+                          type="textarea"
                           {...field}
                           onChange={(event) =>
                             setNotificationMessage(event.target.value)
@@ -108,7 +140,6 @@ export const NotificationDialog = ({ student, onDone }: StudentEditProps) => {
               Cancel
             </Button>
             <Button onClick={sendNotification} variant="outline">
-              {/* {loading && <Spinner className="mr-2 h-4 w-4 animate-spin" />} */}
               Continue
             </Button>
           </div>

@@ -63,4 +63,24 @@ export const users = {
 
     return data;
   },
+  async notifyAll(title: string, message: string, role: RoleType) {
+    const { data } = await client.post('/users/notify', {
+      title,
+      message,
+      sentToId: -1,
+      role,
+    });
+
+    return data;
+  },
+  async notify(id: number, title: string, message: string, role: RoleType) {
+    const { data } = await client.post('/users/notify', {
+      title,
+      message,
+      sentToId: id,
+      role,
+    });
+
+    return data;
+  },
 };

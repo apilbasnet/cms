@@ -1,11 +1,12 @@
-"use client";
-import { columns } from "./components/columns";
-import { DataTable } from "@/components/Table/components/DataTable";
-import { useGetStaffs } from "@/lib/customHooks/getStaffs";
-import { Loading } from "@/components/loading";
-import { useCallback, useState } from "react";
-import { Button } from "@edge-ui/react";
-import { NotificationDialogToStaff } from "@/components/NotificationDialogToStaff";
+'use client';
+import { columns } from './components/columns';
+import { DataTable } from '@/components/Table/components/DataTable';
+import { useGetStaffs } from '@/lib/customHooks/getStaffs';
+import { Loading } from '@/components/loading';
+import { useCallback, useState } from 'react';
+import { Button, toast } from '@edge-ui/react';
+import { NotificationDialog } from '@/components/NotificationDialog';
+import { RoleType } from '@/lib/api/user.api';
 
 type Staff = {
   id: number;
@@ -60,9 +61,16 @@ export default function NotifyStaffPage() {
         <DataTable data={staffData} columns={columnsWithActions} />
 
         {notification && (
-          <NotificationDialogToStaff
-            staff={d}
-            onDone={() => setNotification(false)}
+          <NotificationDialog
+            user={d as any}
+            role={RoleType.TEACHER}
+            onDone={() => {
+              setNotification(false);
+              toast({
+                title: 'Notification Sent',
+                description: 'Notification has been sent',
+              });
+            }}
           />
         )}
       </div>

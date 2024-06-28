@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import { columns } from "./components/columns";
-import { DataTable } from "@/components/Table/components/DataTable";
-import { useGetStudents } from "@/lib/customHooks/getStudents";
-import { Loading } from "@/components/loading";
-import { useCallback, useState } from "react";
-import { Button } from "@edge-ui/react";
-import { NotificationDialog } from "@/components/NotificationDialogToStudent";
+import { columns } from './components/columns';
+import { DataTable } from '@/components/Table/components/DataTable';
+import { useGetStudents } from '@/lib/customHooks/getStudents';
+import { Loading } from '@/components/loading';
+import { useCallback, useState } from 'react';
+import { Button, toast } from '@edge-ui/react';
+import { NotificationDialog } from '@/components/NotificationDialog';
+import { RoleType } from '@/lib/api/user.api';
 
 type Student = {
   id: number;
@@ -60,8 +61,15 @@ export default function NotifyStudentPage() {
 
         {notification && (
           <NotificationDialog
-            student={d}
-            onDone={() => setNotification(false)}
+            role={RoleType.STUDENT}
+            user={d}
+            onDone={() => {
+              setNotification(false);
+              toast({
+                title: 'Notification Sent',
+                description: 'Notification has been sent',
+              });
+            }}
           />
         )}
       </div>
